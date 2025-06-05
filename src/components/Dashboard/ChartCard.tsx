@@ -42,7 +42,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
               <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
               <XAxis dataKey={xAxisKey} className="text-xs" />
               <YAxis className="text-xs" />
-              <Tooltip className="bg-card border border-border rounded-md shadow-lg" />
+              <Tooltip />
               <Line 
                 type="monotone" 
                 dataKey={dataKey} 
@@ -62,7 +62,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
               <CartesianGrid strokeDasharray="3 3" className="opacity-30" />
               <XAxis dataKey={xAxisKey} className="text-xs" />
               <YAxis className="text-xs" />
-              <Tooltip className="bg-card border border-border rounded-md shadow-lg" />
+              <Tooltip />
               <Bar dataKey={dataKey} fill={color} radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -85,7 +85,7 @@ const ChartCard: React.FC<ChartCardProps> = ({
                   <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
                 ))}
               </Pie>
-              <Tooltip className="bg-card border border-border rounded-md shadow-lg" />
+              <Tooltip />
             </PieChart>
           </ResponsiveContainer>
         );

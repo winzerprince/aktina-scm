@@ -1,12 +1,12 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
+import ProfileSettings from '../Profile/ProfileSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Home, Package, Boxes, Factory, BarChart3, MessageSquare, TrendingUp } from 'lucide-react';
+import { Home, Package, Boxes, Factory, BarChart3, MessageSquare, TrendingUp, Settings } from 'lucide-react';
 
 const ProductionDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -18,7 +18,8 @@ const ProductionDashboard: React.FC = () => {
     { id: 'production', label: 'Production', icon: <Factory className="w-4 h-4" /> },
     { id: 'analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'ai-chat', label: 'AI Chat', icon: <MessageSquare className="w-4 h-4" /> },
-    { id: 'sales', label: 'Sales', icon: <TrendingUp className="w-4 h-4" /> }
+    { id: 'sales', label: 'Sales', icon: <TrendingUp className="w-4 h-4" /> },
+    { id: 'profile', label: 'Profile Settings', icon: <Settings className="w-4 h-4" /> }
   ];
 
   const productionLines = [
@@ -289,6 +290,7 @@ const ProductionDashboard: React.FC = () => {
       case 'analytics': return renderAnalyticsTab();
       case 'ai-chat': return renderAiChatTab();
       case 'sales': return renderSalesTab();
+      case 'profile': return <ProfileSettings />;
       default: return renderHomeTab();
     }
   };

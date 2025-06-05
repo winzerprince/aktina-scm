@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
+import AnalyticsCard from './AnalyticsCard';
+import ProfileSettings from '../Profile/ProfileSettings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Home, Package, Settings, Eye, CheckCircle, XCircle } from 'lucide-react';
+import { Home, Package, Settings, Eye, CheckCircle, XCircle, BarChart3 } from 'lucide-react';
 
 const SupplierDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -14,6 +15,7 @@ const SupplierDashboard: React.FC = () => {
   const tabs = [
     { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
     { id: 'orders', label: 'Orders', badge: 5, icon: <Package className="w-4 h-4" /> },
+    { id: 'analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'profile', label: 'Profile Settings', icon: <Settings className="w-4 h-4" /> }
   ];
 
@@ -183,6 +185,97 @@ const SupplierDashboard: React.FC = () => {
     </div>
   );
 
+  const renderAnalyticsTab = () => (
+    <div className="space-y-6 animate-fade-in">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <AnalyticsCard
+          title="Delivery Performance"
+          value={96}
+          unit="%"
+          trend="up"
+          trendValue="2% improvement"
+        />
+        <AnalyticsCard
+          title="Quality Rating"
+          value={98}
+          unit="%"
+          trend="up"
+          trendValue="Excellent quality"
+        />
+        <AnalyticsCard
+          title="Order Growth"
+          value={23}
+          unit="%"
+          trend="up"
+          trendValue="Year over year"
+        />
+      </div>
+
+      <ChartCard
+        title="Revenue & Order Trends"
+        description="Monthly revenue and order volume analysis"
+        data={performanceData}
+        type="bar"
+        dataKey="revenue"
+        xAxisKey="name"
+        color="hsl(var(--aktina-primary))"
+      />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Performance Analytics</CardTitle>
+          <CardDescription>In-depth analysis of supplier performance and quality metrics</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Product Performance</h3>
+              <div className="space-y-3">
+                {[
+                  { product: 'Circuit Boards', sales: 1250, defectRate: 0.2, rating: 4.9 },
+                  { product: 'Resistors', sales: 5600, defectRate: 0.1, rating: 5.0 },
+                  { product: 'Capacitors', sales: 3800, defectRate: 0.3, rating: 4.8 },
+                  { product: 'Microprocessors', sales: 720, defectRate: 0.5, rating: 4.7 }
+                ].map((item, index) => (
+                  <Card key={index} className="p-3">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="font-semibold">{item.product}</div>
+                      <Badge className="bg-aktina-primary text-white">
+                        {item.rating} ⭐
+                      </Badge>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span>Sales: {item.sales} units</span>
+                      <span>Defect Rate: {item.defectRate}%</span>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Quality Metrics</h3>
+              <ChartCard
+                title="Quality Score by Product"
+                data={[
+                  { name: 'Circuit Boards', quality: 97 },
+                  { name: 'Resistors', quality: 99 },
+                  { name: 'Capacitors', quality: 96 },
+                  { name: 'Microprocessors', quality: 94 }
+                ]}
+                type="bar"
+                dataKey="quality"
+                xAxisKey="name"
+                color="hsl(var(--aktina-blue))"
+                className="h-64"
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   const renderProfileTab = () => (
     <div className="space-y-6 animate-fade-in">
       <Card>
@@ -206,7 +299,8 @@ const SupplierDashboard: React.FC = () => {
     switch (activeTab) {
       case 'home': return renderHomeTab();
       case 'orders': return renderOrdersTab();
-      case 'profile': return renderProfileTab();
+      case 'analytics': return renderAnalyticsTab();
+      case 'profile': return <ProfileSettings />;
       default: return renderHomeTab();
     }
   };

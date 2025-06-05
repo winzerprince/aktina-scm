@@ -1,10 +1,10 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
 import AnalyticsCard from './AnalyticsCard';
 import ProfileSettings from '../Profile/ProfileSettings';
+import ChatInterface from '../Chat/ChatInterface';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -398,68 +398,11 @@ const AdminDashboard: React.FC = () => {
     <div className="space-y-6 animate-fade-in">
       <Card>
         <CardHeader>
-          <CardTitle>Communication Hub</CardTitle>
-          <CardDescription>System-wide communication and announcement management</CardDescription>
+          <CardTitle>Communication Center</CardTitle>
+          <CardDescription>Connect with users across the platform and get AI assistance</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Recent Announcements</h3>
-              <div className="space-y-3">
-                {[
-                  { title: 'System Maintenance Scheduled', type: 'System', date: '2024-01-15', priority: 'High' },
-                  { title: 'Q4 Results Published', type: 'Financial', date: '2024-01-12', priority: 'Medium' },
-                  { title: 'New Feature Release', type: 'Product', date: '2024-01-10', priority: 'Low' },
-                  { title: 'Security Update', type: 'Security', date: '2024-01-08', priority: 'High' }
-                ].map((announcement, index) => (
-                  <Card key={index} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium">{announcement.title}</div>
-                      <Badge className={
-                        announcement.priority === 'High' ? 'bg-red-100 text-red-800' :
-                        announcement.priority === 'Medium' ? 'bg-amber-100 text-amber-800' :
-                        'bg-green-100 text-green-800'
-                      }>
-                        {announcement.priority}
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-sm text-muted-foreground">{announcement.type}</span>
-                      <span className="text-sm text-muted-foreground">{announcement.date}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-              <Button className="w-full mt-4 bg-aktina-primary hover:bg-aktina-primary/90">
-                Create New Announcement
-              </Button>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Communication Analytics</h3>
-              <div className="space-y-4">
-                <AnalyticsCard
-                  title="Message Volume"
-                  value={1247}
-                  trend="up"
-                  trendValue="12% increase"
-                />
-                <AnalyticsCard
-                  title="Response Rate"
-                  value={94}
-                  unit="%"
-                  trend="up"
-                  trendValue="Above target"
-                />
-                <AnalyticsCard
-                  title="Active Channels"
-                  value={18}
-                  trend="neutral"
-                  trendValue="All operational"
-                />
-              </div>
-            </div>
-          </div>
+          <ChatInterface userRole="System Administrator" />
         </CardContent>
       </Card>
     </div>

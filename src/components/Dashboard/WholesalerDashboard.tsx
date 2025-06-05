@@ -4,6 +4,7 @@ import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
 import AnalyticsCard from './AnalyticsCard';
 import ProfileSettings from '../Profile/ProfileSettings';
+import ChatInterface from '../Chat/ChatInterface';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -555,69 +556,10 @@ const WholesalerDashboard: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Communication Center</CardTitle>
-          <CardDescription>Manage communications with Aktina and retail partners</CardDescription>
+          <CardDescription>Chat with Aktina, retailers, and get AI assistance for your distribution operations</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Aktina Communications</h3>
-              <div className="space-y-3">
-                {[
-                  { subject: 'Q4 Volume Discount Available', from: 'Aktina Sales', date: '2 hours ago', priority: 'High' },
-                  { subject: 'New Product Line Launch', from: 'Aktina Marketing', date: '1 day ago', priority: 'Medium' },
-                  { subject: 'Delivery Schedule Update', from: 'Aktina Logistics', date: '2 days ago', priority: 'Low' },
-                  { subject: 'Payment Terms Adjustment', from: 'Aktina Finance', date: '3 days ago', priority: 'Medium' }
-                ].map((comm, index) => (
-                  <Card key={index} className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium">{comm.subject}</div>
-                      <Badge className={getPriorityColor(comm.priority)}>
-                        {comm.priority}
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>{comm.from}</span>
-                      <span>{comm.date}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Retailer Support</h3>
-              <div className="space-y-3">
-                {[
-                  { retailer: 'TechMart Electronics', issue: 'Delivery Inquiry', status: 'Open', time: '30 min ago' },
-                  { retailer: 'Digital World Store', issue: 'Product Specification', status: 'Resolved', time: '2 hours ago' },
-                  { retailer: 'Gadget Paradise', issue: 'Payment Question', status: 'In Progress', time: '4 hours ago' },
-                  { retailer: 'Electronics Plus', issue: 'Bulk Order Request', status: 'Open', time: '6 hours ago' }
-                ].map((ticket, index) => (
-                  <Card key={index} className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium">{ticket.issue}</div>
-                      <Badge className={getStatusColor(ticket.status.toLowerCase())}>
-                        {ticket.status}
-                      </Badge>
-                    </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>{ticket.retailer}</span>
-                      <span>{ticket.time}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </div>
-          
-          <div className="mt-6 flex space-x-4">
-            <Button className="bg-aktina-primary hover:bg-aktina-primary/90">
-              New Message to Aktina
-            </Button>
-            <Button variant="outline">
-              Broadcast to Retailers
-            </Button>
-          </div>
+          <ChatInterface userRole="Wholesaler" />
         </CardContent>
       </Card>
     </div>

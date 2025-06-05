@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
@@ -243,7 +242,7 @@ const HRDashboard: React.FC = () => {
                       <span className="text-sm">Performance:</span>
                       <span className="text-sm font-medium">{employee.performance}%</span>
                     </div>
-                    <Badge className={getStatusColor(employee.status)} size="sm">
+                    <Badge className={getStatusColor(employee.status)}>
                       {employee.status.charAt(0).toUpperCase() + employee.status.slice(1)}
                     </Badge>
                   </div>

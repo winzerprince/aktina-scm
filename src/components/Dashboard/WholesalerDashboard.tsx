@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
@@ -160,10 +159,10 @@ const WholesalerDashboard: React.FC = () => {
                   <div className="text-right">
                     <div className="font-semibold">${order.value.toLocaleString()}</div>
                     <div className="flex space-x-1">
-                      <Badge className={getPriorityColor(order.priority)} size="sm">
+                      <Badge className={getPriorityColor(order.priority)}>
                         {order.priority}
                       </Badge>
-                      <Badge className={getStatusColor(order.status)} size="sm">
+                      <Badge className={getStatusColor(order.status)}>
                         {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                       </Badge>
                     </div>
@@ -572,7 +571,7 @@ const WholesalerDashboard: React.FC = () => {
                   <Card key={index} className="p-3">
                     <div className="flex items-center justify-between mb-2">
                       <div className="font-medium">{comm.subject}</div>
-                      <Badge className={getPriorityColor(comm.priority)} size="sm">
+                      <Badge className={getPriorityColor(comm.priority)}>
                         {comm.priority}
                       </Badge>
                     </div>
@@ -597,7 +596,7 @@ const WholesalerDashboard: React.FC = () => {
                   <Card key={index} className="p-3">
                     <div className="flex items-center justify-between mb-2">
                       <div className="font-medium">{ticket.issue}</div>
-                      <Badge className={getStatusColor(ticket.status.toLowerCase())} size="sm">
+                      <Badge className={getStatusColor(ticket.status.toLowerCase())}>
                         {ticket.status}
                       </Badge>
                     </div>

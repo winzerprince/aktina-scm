@@ -13,6 +13,7 @@ interface AnalyticsCardProps {
   trendValue?: string;
   percentage?: number;
   unit?: string;
+  prefix?: string;
   className?: string;
 }
 
@@ -25,6 +26,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   trendValue,
   percentage,
   unit = '',
+  prefix = '',
   className = ''
 }) => {
   const getTrendColor = () => {
@@ -54,9 +56,9 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
       <CardContent>
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold">{value.toLocaleString()}{unit}</span>
+            <span className="text-2xl font-bold">{prefix}{value.toLocaleString()}{unit}</span>
             {target && (
-              <span className="text-sm text-muted-foreground">/ {target.toLocaleString()}{unit}</span>
+              <span className="text-sm text-muted-foreground">/ {prefix}{target.toLocaleString()}{unit}</span>
             )}
           </div>
           
@@ -65,7 +67,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
               <Progress value={progressPercentage} className="h-2" />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{progressPercentage.toFixed(1)}% Complete</span>
-                {target && <span>Target: {target.toLocaleString()}{unit}</span>}
+                {target && <span>Target: {prefix}{target.toLocaleString()}{unit}</span>}
               </div>
             </div>
           )}

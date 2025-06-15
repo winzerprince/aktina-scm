@@ -12,6 +12,46 @@ import { Progress } from '@/components/ui/progress';
 import { Home, ShoppingCart, Users, BarChart3, TrendingUp, Settings, Package, Star, MessageSquare } from 'lucide-react';
 import useOrders from '../../hooks/useOrders';
 
+// Add mock customers array (for dashboard cards and lists)
+const customers = [
+  {
+    id: 'CUS-001',
+    name: 'John Smith',
+    email: 'john.smith@example.com',
+    location: 'New York',
+    orders: 15,
+    revenue: 15800,
+    rating: 4.9
+  },
+  {
+    id: 'CUS-002',
+    name: 'Alice Johnson',
+    email: 'alice.johnson@example.com',
+    location: 'Los Angeles',
+    orders: 11,
+    revenue: 12500,
+    rating: 4.8
+  },
+  {
+    id: 'CUS-003',
+    name: 'Bob Williams',
+    email: 'bob.williams@example.com',
+    location: 'Chicago',
+    orders: 9,
+    revenue: 9800,
+    rating: 4.7
+  },
+  {
+    id: 'CUS-004',
+    name: 'Emily Brown',
+    email: 'emily.brown@example.com',
+    location: 'Miami',
+    orders: 8,
+    revenue: 9000,
+    rating: 4.6
+  }
+];
+
 const RetailerDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
 

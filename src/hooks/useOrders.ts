@@ -19,8 +19,12 @@ export type Order = {
 
 const useOrders = () => {
   const [orders, setOrders] = useState<Order[]>(
-    // Ensure all order objects honor the type
-    ordersJson.map((order) => ({ ...order }))
+    // Ensure all order objects are strictly typed on init
+    ordersJson.map((order) => ({
+      ...order,
+      status: order.status as OrderStatus,
+      priority: order.priority as OrderPriority,
+    }))
   );
 
   // Accept order: status becomes 'accepted', track previous status

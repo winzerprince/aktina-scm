@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -14,6 +13,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Bell, Settings, User, LogOut, Moon, Sun } from 'lucide-react';
 import { useTheme } from '@/hooks/useTheme';
+import Logo from './Logo';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -48,9 +48,7 @@ const Header: React.FC = () => {
       <div className="flex items-center justify-between px-6 py-4">
         {/* Logo and Company Name */}
         <div className="flex items-center space-x-4">
-          <div className="w-10 h-10 bg-gradient-to-r from-aktina-primary to-aktina-forest rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">A</span>
-          </div>
+          <Logo size="md" className="transition-transform duration-200 hover:scale-110" />
           <div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-aktina-primary to-aktina-forest bg-clip-text text-transparent">
               Aktina Supply Chain

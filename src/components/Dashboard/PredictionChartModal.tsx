@@ -6,6 +6,18 @@ import {
   ChartContainer,
 } from "@/components/ui/chart";
 
+// Import required recharts components
+import {
+  LineChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Line,
+  ResponsiveContainer
+} from "recharts";
+
 interface PredictionChartModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -42,30 +54,34 @@ export const PredictionChartModal: React.FC<PredictionChartModalProps> = ({
                 predicted: { color: getColor("predicted"), label: "Predicted" },
               }}
             >
-              {/*
-                Can't use recharts directly, must use <LineChart> etc if needed.
-                Example (pseudo):
+              <ResponsiveContainer width="100%" height={320}>
                 <LineChart data={history}>
-                  ...
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="real"
+                    stroke={getColor("real")}
+                    name="Actual"
+                    strokeWidth={3}
+                    dot={{ r: 5 }}
+                    isAnimationActive={true}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="predicted"
+                    stroke={getColor("predicted")}
+                    name="Predicted"
+                    strokeDasharray="4 4"
+                    strokeWidth={3}
+                    dot={{ r: 5 }}
+                    isAnimationActive={true}
+                  />
                 </LineChart>
-              */}
-              {/* @ts-ignore */}
-              <recharts.LineChart data={history}>
-                {/* @ts-ignore */}
-                <recharts.CartesianGrid strokeDasharray="3 3" />
-                {/* @ts-ignore */}
-                <recharts.XAxis dataKey="date" />
-                {/* @ts-ignore */}
-                <recharts.YAxis />
-                {/* @ts-ignore */}
-                <recharts.Tooltip />
-                {/* @ts-ignore */}
-                <recharts.Legend />
-                {/* @ts-ignore */}
-                <recharts.Line type="monotone" dataKey="real" stroke="hsl(var(--aktina-blue))" name="Actual" />
-                {/* @ts-ignore */}
-                <recharts.Line type="monotone" dataKey="predicted" stroke="hsl(var(--aktina-primary))" name="Predicted" />
-              </recharts.LineChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
         </Card>

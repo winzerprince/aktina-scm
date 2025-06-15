@@ -1,8 +1,10 @@
+
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
 import AnalyticsCard from './AnalyticsCard';
+import CustomerSegmentationChart from './CustomerSegmentationChart';
 import ProfileSettings from '../Profile/ProfileSettings';
 import ChatInterface from '../Chat/ChatInterface';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -110,6 +112,9 @@ const AdminDashboard: React.FC = () => {
           delay={300}
         />
       </div>
+
+      {/* Customer Segmentation Chart */}
+      <CustomerSegmentationChart />
 
       {/* Financial Performance Chart */}
       <ChartCard

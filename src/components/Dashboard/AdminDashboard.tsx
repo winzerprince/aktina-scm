@@ -14,6 +14,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Home, BarChart3, TrendingUp, MessageSquare, Users, Settings, DollarSign, Building, Shield, Bell } from 'lucide-react';
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } from "recharts";
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -422,68 +423,105 @@ const AdminDashboard: React.FC = () => {
     </div>
   );
 
-  const renderPredictionsTab = () => (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="bg-white/60 backdrop-blur rounded-2xl border-0 shadow">
-        <CardHeader>
-          <CardTitle>Sales & Supply Predictions</CardTitle>
-          <div className="flex gap-3 flex-wrap mt-3">
-            {/* SWITCH METRIC */}
-            {predictionMetrics.map((m) => (
-              <button
-                key={m.key}
-                className={`px-4 py-1 rounded-full font-medium transition-all border ${
-                  predictionMetric === m.key
-                    ? "bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 border-blue-400 shadow"
-                    : "bg-white/60 border-neutral-200 text-neutral-700"
-                }`}
-                onClick={() => setPredictionMetric(m.key)}
-              >
-                {m.label}
-              </button>
-            ))}
-            {/* SWITCH TIMEFRAME */}
-            {predictionTimeframes.map((t) => (
-              <button
-                key={t.key}
-                className={`px-4 py-1 rounded-full font-medium transition-all border ${
-                  predictionTimeframe === t.key
-                    ? "bg-gradient-to-br from-aktina-red/60 to-aktina-primary/80 text-white border-aktina-red shadow"
-                    : "bg-white/60 border-neutral-200 text-neutral-700"
-                }`}
-                onClick={() => setPredictionTimeframe(t.key)}
-              >
-                {t.label}
-              </button>
-            ))}
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            <PredictionCard
-              metric={predictionMetric}
-              value={predictions[predictionMetric][predictionTimeframe].value}
-              previous={predictions[predictionMetric][predictionTimeframe].previous}
-              timeframe={predictionTimeframe}
-              unit={predictions[predictionMetric][predictionTimeframe].unit}
-              label={predictions[predictionMetric][predictionTimeframe].label}
-              onClick={() => openChartModal(predictionMetric, predictionTimeframe)}
-            />
-          </div>
-        </CardContent>
-      </Card>
+  const renderPredictionsTab = () => {
+    const selectedPrediction = predictions[predictionMetric][predictionTimeframe];
 
-      {modalData && (
-        <PredictionChartModal
-          open={modalOpen}
-          onOpenChange={setModalOpen}
-          metricLabel={modalData.metric}
-          history={modalData.history}
-          unit={modalData.unit}
-        />
-      )}
-    </div>
-  );
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <Card className="bg-white/60 backdrop-blur rounded-2xl border-0 shadow">
+          <CardHeader>
+            <CardTitle>Sales & Supply Predictions</CardTitle>
+            <div className="flex gap-3 flex-wrap mt-3">
+              {/* SWITCH METRIC */}
+              {predictionMetrics.map((m) => (
+                <button
+                  key={m.key}
+                  className={`px-4 py-1 rounded-full font-medium transition-all border ${
+                    predictionMetric === m.key
+                      ? "bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 border-blue-400 shadow"
+                      : "bg-white/60 border-neutral-200 text-neutral-700"
+                  }`}
+                  onClick={() => setPredictionMetric(m.key)}
+                >
+                  {m.label}
+                </button>
+              ))}
+              {/* SWITCH TIMEFRAME */}
+              {predictionTimeframes.map((t) => (
+                <button
+                  key={t.key}
+                  className={`px-4 py-1 rounded-full font-medium transition-all border ${
+                    predictionTimeframe === t.key
+                      ? "bg-gradient-to-br from-aktina-red/60 to-aktina-primary/80 text-white border-aktina-red shadow"
+                      : "bg-white/60 border-neutral-200 text-neutral-700"
+                  }`}
+                  onClick={() => setPredictionTimeframe(t.key)}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch">
+              <div>
+                <PredictionCard
+                  metric={predictionMetric}
+                  value={selectedPrediction.value}
+                  previous={selectedPrediction.previous}
+                  timeframe={predictionTimeframe}
+                  unit={selectedPrediction.unit}
+                  label={selectedPrediction.label}
+                  // No more onClick for modal!
+                />
+              </div>
+              {/* Inline Graph beside the prediction */}
+              <div className="flex flex-col justify-center">
+                <div className="rounded-lg bg-white/80 p-3 shadow border border-blue-100 h-full">
+                  <div className="text-base font-semibold mb-2 text-aktina-blue">{selectedPrediction.label} - Trend</div>
+                  <div style={{ minWidth: 250, minHeight: 240 }}>
+                    {/* Inline chart logic, using the same chart as in PredictionChartModal.tsx */}
+                    <div className="w-full h-80">
+                      <div className="bg-white/80 rounded-lg p-2 shadow-sm border border-blue-50">
+                        <ResponsiveContainer width="100%" height={230}>
+                          <LineChart data={selectedPrediction.history}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="date" />
+                            <YAxis />
+                            <Tooltip />
+                            <Legend />
+                            <Line
+                              type="monotone"
+                              dataKey="real"
+                              stroke="hsl(var(--aktina-blue))"
+                              name="Actual"
+                              strokeWidth={3}
+                              dot={{ r: 5 }}
+                              isAnimationActive={true}
+                            />
+                            <Line
+                              type="monotone"
+                              dataKey="predicted"
+                              stroke="hsl(var(--aktina-primary))"
+                              name="Predicted"
+                              strokeDasharray="4 4"
+                              strokeWidth={3}
+                              dot={{ r: 5 }}
+                              isAnimationActive={true}
+                            />
+                          </LineChart>
+                        </ResponsiveContainer>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  };
 
   const renderCommunicationTab = () => (
     <div className="space-y-6 animate-fade-in">

@@ -22,8 +22,8 @@ interface ChatContact {
   avatar?: string;
   lastMessage?: string;
   lastMessageTime?: Date;
-  unreadCount?: number;
-  isOnline?: boolean;
+  unreadCount: number;
+  isOnline: boolean;
   isAI?: boolean;
 }
 
@@ -36,9 +36,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
   const [message, setMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const contacts: ChatContact[] = [
+  const [contacts, setContacts] = useState<ChatContact[]>([
     {
       id: 'ai-assistant',
       name: 'Aktina AI Assistant',
@@ -87,10 +85,12 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
       avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400',
       lastMessage: 'Team meeting scheduled for Monday',
       lastMessageTime: new Date(Date.now() - 6 * 60 * 60 * 1000),
-      unreadCount: 0,
+      unreadCount: 3,
       isOnline: false
     }
-  ];
+  ]);
+  
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const filteredContacts = contacts.filter(contact =>
     contact.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -104,6 +104,16 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Mark messages as read when selecting a contact
+  const handleContactSelect = (contact: ChatContact) => {
+    setSelectedContact(contact);
+    
+    // Mark all messages as read and reset unread count
+    setContacts(prev => prev.map(c => 
+      c.id === contact.id ? { ...c, unreadCount: 0 } : c
+    ));
+  };
 
   useEffect(() => {
     if (selectedContact?.id === 'ai-assistant') {
@@ -148,9 +158,21 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
     };
 
     setMessages(prev => [...prev, newMessage]);
+    
+    // Update last message and timestamp for the contact
+    setContacts(prev => prev.map(contact => 
+      contact.id === selectedContact.id 
+        ? { 
+            ...contact, 
+            lastMessage: message,
+            lastMessageTime: new Date()
+          }
+        : contact
+    ));
+    
     setMessage('');
 
-    // Simulate AI response
+    // Simulate response based on contact type
     if (selectedContact.isAI) {
       setTimeout(() => {
         const aiResponse: ChatMessage = {
@@ -161,18 +183,78 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
           isRead: false
         };
         setMessages(prev => [...prev, aiResponse]);
+        
+        // Update contact's last message with AI response
+        setContacts(prev => prev.map(contact => 
+          contact.id === selectedContact.id 
+            ? { 
+                ...contact, 
+                lastMessage: aiResponse.text,
+                lastMessageTime: aiResponse.timestamp
+              }
+            : contact
+        ));
       }, 1000);
+    } else {
+      // Simulate response from other contacts after a delay
+      setTimeout(() => {
+        const responses = [
+          "Thanks for your message! I'll get back to you soon.",
+          "Got it, let me check on that for you.",
+          "I'll review this and respond shortly.",
+          "Thanks for the update!",
+          "Let me look into this and get back to you."
+        ];
+        
+        const response: ChatMessage = {
+          id: (Date.now() + 1).toString(),
+          senderId: selectedContact.id,
+          text: responses[Math.floor(Math.random() * responses.length)],
+          timestamp: new Date(),
+          isRead: false
+        };
+        
+        setMessages(prev => [...prev, response]);
+        
+        // Update contact's last message
+        setContacts(prev => prev.map(contact => 
+          contact.id === selectedContact.id 
+            ? { 
+                ...contact, 
+                lastMessage: response.text,
+                lastMessageTime: response.timestamp
+              }
+            : contact
+        ));
+      }, 2000 + Math.random() * 3000); // Random delay between 2-5 seconds
     }
   };
 
   const getAIResponse = (userMessage: string): string => {
+    const lowerMessage = userMessage.toLowerCase();
+    
+    // More intelligent AI responses based on message content
+    if (lowerMessage.includes('help') || lowerMessage.includes('assist')) {
+      return "I'm here to help! I can assist with analytics, order management, system navigation, and answer questions about your " + userRole + " dashboard.";
+    }
+    if (lowerMessage.includes('order') || lowerMessage.includes('purchase')) {
+      return "I can help you with order management. Would you like to check order status, create new orders, or review order analytics?";
+    }
+    if (lowerMessage.includes('report') || lowerMessage.includes('analytics')) {
+      return "I can generate reports and provide analytics insights. What specific data would you like to analyze?";
+    }
+    if (lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
+      return "Hello! How can I assist you with your " + userRole + " tasks today?";
+    }
+    
     const responses = [
-      "I understand your request. Let me help you with that.",
       "Based on your role as " + userRole + ", I can provide specific insights for your needs.",
-      "That's a great question! Here's what I can tell you...",
-      "I'm processing your request. This information should be helpful for your operations.",
-      "Thank you for reaching out. I'm here to assist with any questions about the platform."
+      "That's a great question! I'm processing your request and can help you with that.",
+      "I understand. Let me provide you with the relevant information for your operations.",
+      "Thank you for reaching out. I'm here to assist with any questions about the platform.",
+      "I can help you optimize your workflow. What specific area would you like to focus on?"
     ];
+    
     return responses[Math.floor(Math.random() * responses.length)];
   };
 
@@ -189,11 +271,40 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
     return `${days}d`;
   };
 
+  // Simulate random online status changes
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setContacts(prev => prev.map(contact => {
+        // Don't change AI status
+        if (contact.isAI) return contact;
+        
+        // 10% chance to toggle online status
+        if (Math.random() < 0.1) {
+          return { ...contact, isOnline: !contact.isOnline };
+        }
+        return contact;
+      }));
+    }, 30000); // Check every 30 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Calculate total unread messages
+  const totalUnreadMessages = contacts.reduce((sum, contact) => sum + contact.unreadCount, 0);
+
   return (
     <div className="flex h-[600px] border rounded-lg overflow-hidden">
       {/* Contacts List */}
       <div className="w-1/3 border-r bg-gray-50 dark:bg-gray-900">
         <div className="p-4 border-b">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="font-semibold">Messages</h3>
+            {totalUnreadMessages > 0 && (
+              <Badge className="bg-aktina-primary text-white">
+                {totalUnreadMessages} unread
+              </Badge>
+            )}
+          </div>
           <div className="relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
@@ -208,7 +319,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
           {filteredContacts.map((contact) => (
             <div
               key={contact.id}
-              onClick={() => setSelectedContact(contact)}
+              onClick={() => handleContactSelect(contact)}
               className={`flex items-center p-4 hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer border-b ${
                 selectedContact?.id === contact.id ? 'bg-blue-50 dark:bg-blue-900/20' : ''
               }`}
@@ -235,8 +346,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
                   <div className="text-sm text-muted-foreground truncate">
                     {contact.lastMessage}
                   </div>
-                  {contact.unreadCount && contact.unreadCount > 0 && (
-                    <Badge className="bg-aktina-primary text-white text-xs">
+                  {contact.unreadCount > 0 && (
+                    <Badge className="bg-aktina-primary text-white text-xs min-w-[20px] h-5 flex items-center justify-center">
                       {contact.unreadCount}
                     </Badge>
                   )}
@@ -265,7 +376,8 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
                 </Avatar>
                 <div>
                   <div className="font-medium">{selectedContact.name}</div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground flex items-center">
+                    <div className={`w-2 h-2 rounded-full mr-2 ${selectedContact.isOnline ? 'bg-green-500' : 'bg-gray-400'}`}></div>
                     {selectedContact.isOnline ? 'Online' : 'Offline'} • {selectedContact.role}
                   </div>
                 </div>
@@ -339,6 +451,11 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ userRole }) => {
               <Bot className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium">Select a contact to start chatting</h3>
               <p className="text-muted-foreground">Choose from your contacts or start with the AI assistant</p>
+              {totalUnreadMessages > 0 && (
+                <p className="text-aktina-primary font-medium mt-2">
+                  You have {totalUnreadMessages} unread message{totalUnreadMessages > 1 ? 's' : ''}
+                </p>
+              )}
             </div>
           </div>
         )}

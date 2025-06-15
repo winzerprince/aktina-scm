@@ -213,7 +213,6 @@ const ProductionDashboard: React.FC = () => {
             </div>
           </CardContent>
         </Card>
-      </Card>
     </div>
   );
 

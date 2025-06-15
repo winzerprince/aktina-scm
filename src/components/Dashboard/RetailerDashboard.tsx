@@ -10,13 +10,29 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Home, ShoppingCart, Users, BarChart3, TrendingUp, Settings, Package, Star, MessageSquare } from 'lucide-react';
+import useOrders from '../../hooks/useOrders';
 
 const RetailerDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
 
+  // Hook for dynamic orders
+  const {
+    orders,
+    acceptOrder,
+    rejectOrder,
+    undoOrder,
+    orderCount,
+    pendingCount
+  } = useOrders();
+
   const tabs = [
     { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
-    { id: 'orders', label: 'Orders', badge: 8, icon: <ShoppingCart className="w-4 h-4" /> },
+    {
+      id: 'orders',
+      label: 'Orders',
+      badge: pendingCount > 0 ? pendingCount : undefined,
+      icon: <ShoppingCart className="w-4 h-4" />,
+    },
     { id: 'customers', label: 'Customers', icon: <Users className="w-4 h-4" /> },
     { id: 'analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'insights', label: 'Market Insights', icon: <TrendingUp className="w-4 h-4" /> },
@@ -36,20 +52,6 @@ const RetailerDashboard: React.FC = () => {
   const customerData = [
     { name: 'New', value: 120 },
     { name: 'Returning', value: 480 }
-  ];
-
-  const orders = [
-    { id: 'ORD-001', date: '2024-01-05', customer: 'John Smith', products: 'Laptop, Mouse', quantity: 2, value: 1450, status: 'shipped', priority: 'High' },
-    { id: 'ORD-002', date: '2024-01-08', customer: 'Alice Johnson', products: 'Keyboard', quantity: 1, value: 120, status: 'processing', priority: 'Medium' },
-    { id: 'ORD-003', date: '2024-01-12', customer: 'Bob Williams', products: 'Monitor, Webcam', quantity: 2, value: 680, status: 'pending', priority: 'High' },
-    { id: 'ORD-004', date: '2024-01-15', customer: 'Emily Brown', products: 'Tablet', quantity: 1, value: 350, status: 'delivered', priority: 'Low' }
-  ];
-
-  const customers = [
-    { id: 'CUS-001', name: 'John Smith', email: 'john.123@example.com', location: 'New York', orders: 12, revenue: 14500, rating: 4.7 },
-    { id: 'CUS-002', name: 'Alice Johnson', email: 'john.123@example.com', location: 'Los Angeles', orders: 8, revenue: 9200, rating: 4.9 },
-    { id: 'CUS-003', name: 'Bob Williams', email: 'john.123@example.com', location: 'Chicago', orders: 15, revenue: 18750, rating: 4.6 },
-    { id: 'CUS-004', name: 'Emily Brown', email: 'john.123@example.com', location: 'Houston', orders: 5, revenue: 5600, rating: 4.8 }
   ];
 
   const getStatusColor = (status: string) => {
@@ -233,9 +235,9 @@ const RetailerDashboard: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <AnalyticsCard
               title="Pending Orders"
-              value={8}
-              trend="down"
-              trendValue="3 processed today"
+              value={pendingCount}
+              trend={pendingCount < 5 ? "down" : "up"}
+              trendValue={pendingCount === 1 ? "1 pending" : `${pendingCount} pending`}
             />
             <AnalyticsCard
               title="Processing Time"
@@ -246,7 +248,7 @@ const RetailerDashboard: React.FC = () => {
             />
             <AnalyticsCard
               title="Total Value"
-              value={125000}
+              value={orders.reduce((sum, o) => sum + o.value, 0)}
               prefix="$"
               trend="up"
               trendValue="High value orders"
@@ -258,7 +260,9 @@ const RetailerDashboard: React.FC = () => {
               <Card key={order.id} className="p-4">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <div className="font-semibold text-lg">{order.id} - {order.customer}</div>
+                    <div className="font-semibold text-lg">
+                      {order.id} - {order.customer}
+                    </div>
                     <div className="text-sm text-muted-foreground">{order.products}</div>
                   </div>
                   <div className="flex space-x-2">
@@ -268,6 +272,12 @@ const RetailerDashboard: React.FC = () => {
                     <Badge className={getStatusColor(order.status)}>
                       {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                     </Badge>
+                    {order.previousStatus &&
+                      (order.status === "accepted" || order.status === "rejected") && (
+                        <Badge className="bg-aktina-blue text-white">
+                          Can Undo
+                        </Badge>
+                      )}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -284,16 +294,33 @@ const RetailerDashboard: React.FC = () => {
                     <div className="font-semibold">5-7 business days</div>
                   </div>
                 </div>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap gap-2">
                   {order.status === 'pending' && (
                     <>
-                      <Button size="sm" className="bg-aktina-primary hover:bg-aktina-primary/90">
+                      <Button
+                        size="sm"
+                        className="bg-aktina-primary hover:bg-aktina-primary/90"
+                        onClick={() => acceptOrder(order.id)}
+                      >
                         Accept Order
                       </Button>
-                      <Button size="sm" variant="outline">
-                        Request Changes
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => rejectOrder(order.id)}
+                      >
+                        Reject Order
                       </Button>
                     </>
+                  )}
+                  {(order.status === 'accepted' || order.status === 'rejected') && order.previousStatus && (
+                    <Button
+                      size="sm"
+                      variant="secondary"
+                      onClick={() => undoOrder(order.id)}
+                    >
+                      Undo
+                    </Button>
                   )}
                   <Button size="sm" variant="outline">
                     View Details

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
@@ -358,7 +357,7 @@ const RetailerDashboard: React.FC = () => {
                 className="pl-10"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
@@ -372,7 +371,7 @@ const RetailerDashboard: React.FC = () => {
                 <SelectItem value="rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={priorityFilter} onValueChange={setPriorityFilter}>
+            <Select value={priorityFilter} onValueChange={(value) => setPriorityFilter(value as typeof priorityFilter)}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
@@ -562,7 +561,7 @@ const RetailerDashboard: React.FC = () => {
                 className="pl-10"
               />
             </div>
-            <Select value={customerStatusFilter} onValueChange={setCustomerStatusFilter}>
+            <Select value={customerStatusFilter} onValueChange={(value) => setCustomerStatusFilter(value as typeof customerStatusFilter)}>
               <SelectTrigger className="w-40">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>

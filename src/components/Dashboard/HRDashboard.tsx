@@ -4,11 +4,12 @@ import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
 import AnalyticsCard from './AnalyticsCard';
 import ProfileSettings from '../Profile/ProfileSettings';
+import ChatInterface from '../Chat/ChatInterface';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Home, Users, MapPin, BarChart3, TrendingUp, Settings, User, Clock, Target } from 'lucide-react';
+import { Home, Users, MapPin, BarChart3, TrendingUp, Settings, User, Clock, Target, MessageSquare } from 'lucide-react';
 
 const HRDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
@@ -19,6 +20,7 @@ const HRDashboard: React.FC = () => {
     { id: 'distribution', label: 'Distribution', icon: <MapPin className="w-4 h-4" /> },
     { id: 'analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'predictions', label: 'Predictions', icon: <TrendingUp className="w-4 h-4" /> },
+    { id: 'communication', label: 'Communication', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'profile', label: 'Profile Settings', icon: <Settings className="w-4 h-4" /> }
   ];
 
@@ -459,6 +461,20 @@ const HRDashboard: React.FC = () => {
     </div>
   );
 
+  const renderCommunicationTab = () => (
+    <div className="space-y-6 animate-fade-in">
+      <Card>
+        <CardHeader>
+          <CardTitle>Communication Center</CardTitle>
+          <CardDescription>Chat with team members, management, and get AI assistance for HR operations</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChatInterface userRole="HR Manager" />
+        </CardContent>
+      </Card>
+    </div>
+  );
+
   const renderTabContent = () => {
     switch (activeTab) {
       case 'home': return renderHomeTab();
@@ -466,6 +482,7 @@ const HRDashboard: React.FC = () => {
       case 'distribution': return renderDistributionTab();
       case 'analytics': return renderAnalyticsTab();
       case 'predictions': return renderPredictionsTab();
+      case 'communication': return renderCommunicationTab();
       case 'profile': return <ProfileSettings />;
       default: return renderHomeTab();
     }

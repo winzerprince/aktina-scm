@@ -1,137 +1,141 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
 import ChartCard from './ChartCard';
 import AnalyticsCard from './AnalyticsCard';
 import ProfileSettings from '../Profile/ProfileSettings';
+import ChatInterface from '../Chat/ChatInterface';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { Home, ShoppingCart, MessageSquare, TrendingUp, Settings, Star, Package, Users, DollarSign } from 'lucide-react';
+import { Home, ShoppingCart, Users, BarChart3, TrendingUp, Settings, Package, Star, MessageSquare } from 'lucide-react';
 
 const RetailerDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
 
   const tabs = [
     { id: 'home', label: 'Home', icon: <Home className="w-4 h-4" /> },
-    { id: 'orders', label: 'Orders', badge: 3, icon: <ShoppingCart className="w-4 h-4" /> },
-    { id: 'feedback', label: 'Customer Feedback', icon: <MessageSquare className="w-4 h-4" /> },
+    { id: 'orders', label: 'Orders', badge: 8, icon: <ShoppingCart className="w-4 h-4" /> },
+    { id: 'customers', label: 'Customers', icon: <Users className="w-4 h-4" /> },
+    { id: 'analytics', label: 'Analytics', icon: <BarChart3 className="w-4 h-4" /> },
     { id: 'insights', label: 'Market Insights', icon: <TrendingUp className="w-4 h-4" /> },
+    { id: 'communication', label: 'Communication', icon: <MessageSquare className="w-4 h-4" /> },
     { id: 'profile', label: 'Profile Settings', icon: <Settings className="w-4 h-4" /> }
   ];
 
   const salesData = [
-    { name: 'Jan', sales: 125000, customers: 450, satisfaction: 4.6 },
-    { name: 'Feb', sales: 138000, customers: 485, satisfaction: 4.7 },
-    { name: 'Mar', sales: 142000, customers: 520, satisfaction: 4.5 },
-    { name: 'Apr', sales: 156000, customers: 550, satisfaction: 4.8 },
-    { name: 'May', sales: 148000, customers: 535, satisfaction: 4.7 },
-    { name: 'Jun', sales: 167000, customers: 580, satisfaction: 4.9 }
+    { name: 'Jan', sales: 425, customers: 120, returns: 15 },
+    { name: 'Feb', sales: 480, customers: 135, returns: 10 },
+    { name: 'Mar', sales: 510, customers: 145, returns: 12 },
+    { name: 'Apr', sales: 550, customers: 155, returns: 8 },
+    { name: 'May', sales: 580, customers: 165, returns: 14 },
+    { name: 'Jun', sales: 620, customers: 175, returns: 9 }
   ];
 
-  const recentOrders = [
-    { id: 'ORD-R001', products: 'Smartphone Bundle', quantity: 50, status: 'delivered', value: 25000, date: '2024-01-15' },
-    { id: 'ORD-R002', products: 'Laptop Collection', quantity: 25, status: 'in-transit', value: 37500, date: '2024-01-12' },
-    { id: 'ORD-R003', products: 'Audio Equipment', quantity: 80, status: 'processing', value: 24000, date: '2024-01-10' },
-    { id: 'ORD-R004', products: 'Gaming Devices', quantity: 30, status: 'pending', value: 45000, date: '2024-01-08' }
+  const customerData = [
+    { name: 'New', value: 120 },
+    { name: 'Returning', value: 480 }
   ];
 
-  const customerFeedback = [
-    { id: 1, customer: 'John Smith', product: 'Smartphone X1', rating: 5, comment: 'Excellent product and fast delivery!', date: '2024-01-14' },
-    { id: 2, customer: 'Sarah Johnson', product: 'Laptop Pro', rating: 4, comment: 'Great performance, minor shipping delay.', date: '2024-01-13' },
-    { id: 3, customer: 'Mike Chen', product: 'Wireless Headphones', rating: 5, comment: 'Amazing sound quality, highly recommended!', date: '2024-01-12' },
-    { id: 4, customer: 'Lisa Rodriguez', product: 'Gaming Console', rating: 4, comment: 'Good value for money, satisfied with purchase.', date: '2024-01-11' }
+  const orders = [
+    { id: 'ORD-001', date: '2024-01-05', customer: 'John Smith', products: 'Laptop, Mouse', quantity: 2, value: 1450, status: 'shipped', priority: 'High' },
+    { id: 'ORD-002', date: '2024-01-08', customer: 'Alice Johnson', products: 'Keyboard', quantity: 1, value: 120, status: 'processing', priority: 'Medium' },
+    { id: 'ORD-003', date: '2024-01-12', customer: 'Bob Williams', products: 'Monitor, Webcam', quantity: 2, value: 680, status: 'pending', priority: 'High' },
+    { id: 'ORD-004', date: '2024-01-15', customer: 'Emily Brown', products: 'Tablet', quantity: 1, value: 350, status: 'delivered', priority: 'Low' }
   ];
 
-  const topProducts = [
-    { name: 'Smartphone X1', sales: 145, revenue: 72500, rating: 4.8, trend: 'up' },
-    { name: 'Laptop Pro 15"', sales: 89, revenue: 133500, rating: 4.6, trend: 'up' },
-    { name: 'Wireless Headphones', sales: 234, revenue: 35100, rating: 4.9, trend: 'up' },
-    { name: 'Gaming Console', sales: 67, revenue: 100500, rating: 4.7, trend: 'down' }
+  const customers = [
+    { id: 'CUS-001', name: 'John Smith', email: 'john.123@example.com', location: 'New York', orders: 12, revenue: 14500, rating: 4.7 },
+    { id: 'CUS-002', name: 'Alice Johnson', email: 'john.123@example.com', location: 'Los Angeles', orders: 8, revenue: 9200, rating: 4.9 },
+    { id: 'CUS-003', name: 'Bob Williams', email: 'john.123@example.com', location: 'Chicago', orders: 15, revenue: 18750, rating: 4.6 },
+    { id: 'CUS-004', name: 'Emily Brown', email: 'john.123@example.com', location: 'Houston', orders: 5, revenue: 5600, rating: 4.8 }
   ];
 
   const getStatusColor = (status: string) => {
     switch (status) {
+      case 'pending': return 'bg-amber-100 text-amber-800';
+      case 'processing': return 'bg-blue-100 text-blue-800';
+      case 'shipped': return 'bg-purple-100 text-purple-800';
       case 'delivered': return 'bg-green-100 text-green-800';
-      case 'in-transit': return 'bg-blue-100 text-blue-800';
-      case 'processing': return 'bg-amber-100 text-amber-800';
-      case 'pending': return 'bg-gray-100 text-gray-800';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
 
-  const getRatingStars = (rating: number) => {
-    return '⭐'.repeat(Math.floor(rating)) + (rating % 1 ? '⭐' : '');
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'High': return 'bg-red-100 text-red-800';
+      case 'Medium': return 'bg-amber-100 text-amber-800';
+      case 'Low': return 'bg-green-100 text-green-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   const renderHomeTab = () => (
     <div className="space-y-6 animate-fade-in">
-      {/* Retail Overview */}
-      <Card className="bg-gradient-to-r from-aktina-forest/10 to-aktina-blue/10 border-0">
+      {/* Sales Overview */}
+      <Card className="bg-gradient-to-r from-aktina-blue/10 to-aktina-purple/10 border-0">
         <CardHeader>
-          <CardTitle className="text-xl">Retail Performance Overview</CardTitle>
-          <CardDescription>Daily sales summary and customer satisfaction metrics</CardDescription>
+          <CardTitle className="text-xl">Sales Overview</CardTitle>
+          <CardDescription>Real-time sales metrics and customer engagement</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-              <div className="text-2xl font-bold text-aktina-forest">$167K</div>
-              <div className="text-sm text-muted-foreground">Monthly Sales</div>
+              <div className="text-2xl font-bold text-aktina-blue">175</div>
+              <div className="text-sm text-muted-foreground">New Customers</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-aktina-blue">580</div>
-              <div className="text-sm text-muted-foreground">Active Customers</div>
-              <Progress value={78} className="mt-2" />
+              <div className="text-2xl font-bold text-aktina-purple">620</div>
+              <div className="text-sm text-muted-foreground">Orders This Month</div>
+              <Progress value={89} className="mt-2" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-aktina-primary">4.9</div>
-              <div className="text-sm text-muted-foreground">Avg Rating</div>
+              <div className="text-2xl font-bold text-aktina-amber">$245K</div>
+              <div className="text-sm text-muted-foreground">Monthly Revenue</div>
             </div>
             <div>
-              <div className="text-2xl font-bold text-aktina-amber">3</div>
-              <div className="text-sm text-muted-foreground">Pending Orders</div>
+              <div className="text-2xl font-bold text-aktina-forest">96%</div>
+              <div className="text-sm text-muted-foreground">Customer Satisfaction</div>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Key Performance Metrics */}
+      {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard
-          title="Daily Sales"
-          value={5400}
+          title="Monthly Revenue"
+          value={245000}
           prefix="$"
-          icon={<DollarSign className="w-4 h-4" />}
+          icon={<TrendingUp className="w-4 h-4" />}
           trend="up"
-          trendValue="8% vs yesterday"
+          trendValue="12% vs last month"
           delay={0}
         />
         <MetricCard
-          title="Transaction Volume"
-          value={47}
-          icon={<ShoppingCart className="w-4 h-4" />}
+          title="Order Volume"
+          value={620}
+          icon={<Package className="w-4 h-4" />}
           trend="up"
-          trendValue="12 transactions today"
+          trendValue="23 orders today"
           delay={100}
         />
         <MetricCard
-          title="Customer Satisfaction"
-          value={98}
-          suffix="%"
-          icon={<Star className="w-4 h-4" />}
+          title="Customer Growth"
+          value={175}
+          icon={<Users className="w-4 h-4" />}
           trend="up"
-          trendValue="Excellent feedback"
+          trendValue="4 new partners"
           delay={200}
         />
         <MetricCard
-          title="Inventory Turnover"
-          value={6.8}
-          suffix="x"
-          icon={<Package className="w-4 h-4" />}
+          title="Avg Order Value"
+          value={395}
+          prefix="$"
+          icon={<ShoppingCart className="w-4 h-4" />}
           trend="up"
-          trendValue="Above industry avg"
+          trendValue="5% increase"
           delay={300}
         />
       </div>
@@ -140,30 +144,35 @@ const RetailerDashboard: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Recent Orders</CardTitle>
-          <CardDescription>Latest orders and their current status</CardDescription>
+          <CardDescription>Latest orders from customers requiring attention</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {recentOrders.map((order, index) => (
+            {orders.slice(0, 4).map((order, index) => (
               <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all">
                 <div className="flex items-center space-x-4">
                   <div>
                     <div className="font-semibold">{order.id}</div>
-                    <div className="text-sm text-muted-foreground">{order.products}</div>
+                    <div className="text-sm text-muted-foreground">{order.customer}</div>
                   </div>
                   <div>
-                    <div className="font-medium">Qty: {order.quantity}</div>
-                    <div className="text-sm text-muted-foreground">{order.date}</div>
+                    <div className="font-medium">{order.products}</div>
+                    <div className="text-sm text-muted-foreground">Qty: {order.quantity}</div>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
                   <div className="text-right">
                     <div className="font-semibold">${order.value.toLocaleString()}</div>
-                    <Badge className={getStatusColor(order.status)}>
-                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                    </Badge>
+                    <div className="flex space-x-1">
+                      <Badge className={getPriorityColor(order.priority)}>
+                        {order.priority}
+                      </Badge>
+                      <Badge className={getStatusColor(order.status)}>
+                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </Badge>
+                    </div>
                   </div>
-                  <Button size="sm" variant="outline">Track Order</Button>
+                  <Button size="sm" variant="outline">Process</Button>
                 </div>
               </div>
             ))}
@@ -171,35 +180,28 @@ const RetailerDashboard: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Top Performing Products */}
+      {/* Top Customers */}
       <Card>
         <CardHeader>
-          <CardTitle>Top Performing Products</CardTitle>
-          <CardDescription>Best-selling products and their performance metrics</CardDescription>
+          <CardTitle>Top Customers</CardTitle>
+          <CardDescription>Revenue and engagement metrics for key customers</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {topProducts.map((product, index) => (
-              <Card key={product.name} className="p-4">
+            {customers.map((customer, index) => (
+              <Card key={customer.name} className="p-4">
                 <div className="flex items-center justify-between mb-3">
                   <div>
-                    <div className="font-semibold">{product.name}</div>
-                    <div className="text-sm text-muted-foreground">{product.sales} units sold</div>
+                    <div className="font-semibold">{customer.name}</div>
+                    <div className="text-sm text-muted-foreground">{customer.orders} orders • ${customer.revenue.toLocaleString()}</div>
                   </div>
-                  <div className="text-right">
-                    <Badge className="bg-aktina-primary text-white mb-1">
-                      {product.rating} ⭐
-                    </Badge>
-                    <div className="text-sm font-medium">${product.revenue.toLocaleString()}</div>
-                  </div>
+                  <Badge className="bg-aktina-primary text-white">
+                    {customer.rating} ⭐
+                  </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Performance</span>
-                  <div className="flex items-center space-x-1">
-                    <span className={`text-sm font-medium ${product.trend === 'up' ? 'text-green-600' : 'text-red-600'}`}>
-                      {product.trend === 'up' ? '↗' : '↘'} Trending
-                    </span>
-                  </div>
+                  <span className="text-sm">Location: {customer.location}</span>
+                  <Progress value={customer.rating * 20} className="w-20 h-2" />
                 </div>
               </Card>
             ))}
@@ -207,15 +209,15 @@ const RetailerDashboard: React.FC = () => {
         </CardContent>
       </Card>
 
-      {/* Sales Performance Chart */}
+      {/* Sales Trend Chart */}
       <ChartCard
         title="Sales Performance Trends"
-        description="Monthly sales, customer count, and satisfaction trends"
+        description="Monthly sales, orders, and customer growth trends"
         data={salesData}
         type="line"
         dataKey="sales"
         xAxisKey="name"
-        color="hsl(var(--aktina-forest))"
+        color="hsl(var(--aktina-blue))"
       />
     </div>
   );
@@ -225,258 +227,223 @@ const RetailerDashboard: React.FC = () => {
       <Card>
         <CardHeader>
           <CardTitle>Order Management</CardTitle>
-          <CardDescription>Place new orders and track existing ones</CardDescription>
+          <CardDescription>Manage and track customer orders</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <AnalyticsCard
-              title="Order Status"
-              value={3}
+              title="Pending Orders"
+              value={8}
               trend="down"
-              trendValue="1 delivered today"
+              trendValue="3 processed today"
             />
             <AnalyticsCard
-              title="Order Value"
-              value={132000}
+              title="Processing Time"
+              value={2.4}
+              unit=" hours"
+              trend="down"
+              trendValue="15% faster"
+            />
+            <AnalyticsCard
+              title="Total Value"
+              value={125000}
               prefix="$"
               trend="up"
               trendValue="High value orders"
             />
-            <AnalyticsCard
-              title="Delivery Time"
-              value={4.2}
-              unit=" days"
-              trend="down"
-              trendValue="Faster delivery"
-            />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Active Orders</h3>
-              <div className="space-y-4">
-                {recentOrders.filter(order => order.status !== 'delivered').map((order) => (
-                  <Card key={order.id} className="p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <div>
-                        <div className="font-semibold">{order.id}</div>
-                        <div className="text-sm text-muted-foreground">{order.products}</div>
-                      </div>
-                      <Badge className={getStatusColor(order.status)}>
-                        {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
-                      </Badge>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <div className="text-muted-foreground">Quantity</div>
-                        <div className="font-medium">{order.quantity} units</div>
-                      </div>
-                      <div>
-                        <div className="text-muted-foreground">Value</div>
-                        <div className="font-medium">${order.value.toLocaleString()}</div>
-                      </div>
-                    </div>
-                    <div className="flex space-x-2 mt-3">
-                      <Button size="sm" variant="outline" className="flex-1">
-                        Track Order
+          <div className="space-y-4">
+            {orders.map((order, index) => (
+              <Card key={order.id} className="p-4">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <div className="font-semibold text-lg">{order.id} - {order.customer}</div>
+                    <div className="text-sm text-muted-foreground">{order.products}</div>
+                  </div>
+                  <div className="flex space-x-2">
+                    <Badge className={getPriorityColor(order.priority)}>
+                      {order.priority} Priority
+                    </Badge>
+                    <Badge className={getStatusColor(order.status)}>
+                      {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div>
+                    <div className="text-sm text-muted-foreground">Quantity</div>
+                    <div className="font-semibold">{order.quantity} units</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Order Value</div>
+                    <div className="font-semibold">${order.value.toLocaleString()}</div>
+                  </div>
+                  <div>
+                    <div className="text-sm text-muted-foreground">Expected Delivery</div>
+                    <div className="font-semibold">5-7 business days</div>
+                  </div>
+                </div>
+                <div className="flex space-x-2">
+                  {order.status === 'pending' && (
+                    <>
+                      <Button size="sm" className="bg-aktina-primary hover:bg-aktina-primary/90">
+                        Accept Order
                       </Button>
-                      <Button size="sm" variant="outline" className="flex-1">
-                        Contact Support
+                      <Button size="sm" variant="outline">
+                        Request Changes
                       </Button>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Place New Order</h3>
-              <Card className="p-4">
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium">Product Category</label>
-                    <select className="w-full mt-1 p-2 border rounded-md">
-                      <option>Smartphones</option>
-                      <option>Laptops</option>
-                      <option>Audio Equipment</option>
-                      <option>Gaming Devices</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Quantity</label>
-                    <input type="number" className="w-full mt-1 p-2 border rounded-md" placeholder="Enter quantity" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium">Special Requirements</label>
-                    <textarea className="w-full mt-1 p-2 border rounded-md" rows={3} placeholder="Any special requirements..."></textarea>
-                  </div>
-                  <Button className="w-full bg-aktina-primary hover:bg-aktina-primary/90">
-                    Submit Order Request
+                    </>
+                  )}
+                  <Button size="sm" variant="outline">
+                    View Details
+                  </Button>
+                  <Button size="sm" variant="outline">
+                    Contact Customer
                   </Button>
                 </div>
               </Card>
-              
-              <div className="mt-4">
-                <h4 className="font-semibold mb-2">Recent Product Catalog</h4>
-                <div className="space-y-2">
-                  {topProducts.slice(0, 3).map((product) => (
-                    <div key={product.name} className="flex items-center justify-between p-2 border rounded">
-                      <span className="text-sm font-medium">{product.name}</span>
-                      <Button size="sm" variant="outline">Add to Cart</Button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            ))}
           </div>
         </CardContent>
       </Card>
     </div>
   );
 
-  const renderFeedbackTab = () => (
+  const renderCustomersTab = () => (
     <div className="space-y-6 animate-fade-in">
       <Card>
         <CardHeader>
-          <CardTitle>Customer Feedback Management</CardTitle>
-          <CardDescription>Collect, analyze, and respond to customer feedback</CardDescription>
+          <CardTitle>Customer Management</CardTitle>
+          <CardDescription>Manage customer relationships and profiles</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <AnalyticsCard
-              title="Average Rating"
+              title="Total Customers"
+              value={620}
+              trend="up"
+              trendValue="4 new this month"
+            />
+            <AnalyticsCard
+              title="Active Customers"
+              value={580}
+              trend="up"
+              trendValue="94% active rate"
+            />
+            <AnalyticsCard
+              title="Avg Rating"
               value={4.7}
               unit="/5"
               trend="up"
               trendValue="Excellent service"
             />
             <AnalyticsCard
-              title="Total Reviews"
-              value={842}
-              trend="up"
-              trendValue="21 new this week"
-            />
-            <AnalyticsCard
-              title="Response Rate"
-              value={94}
+              title="Growth Rate"
+              value={23}
               unit="%"
               trend="up"
-              trendValue="Above target"
+              trendValue="Year over year"
             />
           </div>
           
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Recent Customer Feedback</h3>
-            <div className="space-y-4">
-              {customerFeedback.map((feedback) => (
-                <Card key={feedback.id} className="p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <div className="font-semibold">{feedback.customer}</div>
-                      <div className="text-sm text-muted-foreground">{feedback.product} • {feedback.date}</div>
-                    </div>
-                    <div className="text-amber-400">
-                      {getRatingStars(feedback.rating)}
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {customers.concat([
+              { id: 'CUS-005', name: 'David Lee', email: 'john.123@example.com', location: 'San Francisco', orders: 10, revenue: 11200, rating: 4.5 },
+              { id: 'CUS-006', name: 'Karen Davis', email: 'john.123@example.com', location: 'Seattle', orders: 7, revenue: 8400, rating: 4.8 }
+            ]).map((customer) => (
+              <Card key={customer.name} className="p-4">
+                <div className="flex items-center space-x-3 mb-3">
+                  <div className="w-12 h-12 bg-aktina-blue/10 rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-aktina-blue" />
                   </div>
-                  <div className="bg-muted p-3 rounded-md italic text-sm">
-                    "{feedback.comment}"
-                  </div>
-                  <div className="flex space-x-2 mt-3">
-                    <Button size="sm" variant="outline" className="flex-1">
-                      Reply
-                    </Button>
-                    <Button size="sm" variant="outline" className="flex-1">
-                      Flag for Review
-                    </Button>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </div>
-          
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4">Feedback Collection</h3>
-            <Card className="p-4">
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">Contact Method</label>
-                  <div className="flex space-x-4 mt-2">
-                    <label className="flex items-center space-x-2">
-                      <input type="radio" name="contact" defaultChecked />
-                      <span>Email</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input type="radio" name="contact" />
-                      <span>SMS</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                      <input type="radio" name="contact" />
-                      <span>QR Code</span>
-                    </label>
+                  <div>
+                    <div className="font-semibold">{customer.name}</div>
+                    <div className="text-sm text-muted-foreground">{customer.rating} ⭐ Rating</div>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Feedback Request Template</label>
-                  <select className="w-full p-2 border rounded-md">
-                    <option>Post-Purchase Survey</option>
-                    <option>Product Review Request</option>
-                    <option>Customer Satisfaction Survey</option>
-                  </select>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Monthly Orders:</span>
+                    <span className="font-medium">{customer.orders}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm">Revenue:</span>
+                    <span className="font-medium">${customer.revenue.toLocaleString()}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Location:</span>
+                    <span className="font-medium">{customer.location}</span>
+                  </div>
                 </div>
-                <Button className="w-full bg-aktina-primary hover:bg-aktina-primary/90">
-                  Send Feedback Request
-                </Button>
-              </div>
-            </Card>
+                <div className="flex space-x-2 mt-3">
+                  <Button size="sm" variant="outline" className="flex-1">
+                    Contact
+                  </Button>
+                  <Button size="sm" variant="outline" className="flex-1">
+                    View Details
+                  </Button>
+                </div>
+              </Card>
+            ))}
           </div>
         </CardContent>
       </Card>
     </div>
   );
 
-  const renderInsightsTab = () => (
+  const renderAnalyticsTab = () => (
     <div className="space-y-6 animate-fade-in">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <AnalyticsCard
+          title="Revenue Growth"
+          value={28}
+          unit="%"
+          trend="up"
+          trendValue="vs last quarter"
+        />
+        <AnalyticsCard
+          title="Market Penetration"
+          value={15}
+          unit="%"
+          trend="up"
+          trendValue="Regional leader"
+        />
+        <AnalyticsCard
+          title="Customer Retention"
+          value={94}
+          unit="%"
+          trend="up"
+          trendValue="Industry best"
+        />
+      </div>
+
+      <ChartCard
+        title="Sales Performance Analytics"
+        description="Comprehensive business metrics and trend analysis"
+        data={salesData}
+        type="bar"
+        dataKey="sales"
+        xAxisKey="name"
+        color="hsl(var(--aktina-blue))"
+      />
+
       <Card>
         <CardHeader>
-          <CardTitle>Market Insights & Analytics</CardTitle>
-          <CardDescription>Consumer trends, competitive analysis, and market intelligence</CardDescription>
+          <CardTitle>Detailed Business Analytics</CardTitle>
+          <CardDescription>In-depth analysis of sales operations and market performance</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-            <AnalyticsCard
-              title="Market Growth"
-              value={12.5}
-              unit="%"
-              trend="up"
-              trendValue="Expanding market"
-            />
-            <AnalyticsCard
-              title="Competitive Position"
-              value={2}
-              unit="nd"
-              trend="up"
-              trendValue="In local market"
-            />
-            <AnalyticsCard
-              title="Market Share"
-              value={18}
-              unit="%"
-              trend="up"
-              trendValue="2% gain YoY"
-            />
-          </div>
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Consumer Trends</h3>
+              <h3 className="text-lg font-semibold mb-4">Customer Demographics</h3>
               <ChartCard
-                title="Consumer Preferences"
+                title="Customer Locations"
                 data={[
-                  { name: 'Performance', value: 45 },
-                  { name: 'Price', value: 30 },
-                  { name: 'Brand', value: 15 },
-                  { name: 'Features', value: 10 }
+                  { name: 'New York', value: 35 },
+                  { name: 'Los Angeles', value: 28 },
+                  { name: 'Chicago', value: 22 },
+                  { name: 'Houston', value: 15 }
                 ]}
                 type="pie"
                 dataKey="value"
@@ -485,67 +452,127 @@ const RetailerDashboard: React.FC = () => {
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">Seasonal Analysis</h3>
+              <h3 className="text-lg font-semibold mb-4">Sales by Product Category</h3>
               <div className="space-y-3">
                 {[
-                  { season: 'Spring', trend: 'Moderate Growth', products: 'Audio, Wearables', change: '+8%' },
-                  { season: 'Summer', trend: 'Strong Growth', products: 'Smartphones, Cameras', change: '+15%' },
-                  { season: 'Fall', trend: 'Peak Season', products: 'Laptops, Tablets', change: '+23%' },
-                  { season: 'Winter', trend: 'High Activity', products: 'Gaming, Smart Home', change: '+18%' }
-                ].map((season, index) => (
-                  <Card key={index} className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-medium">{season.season} - {season.trend}</div>
-                      <Badge className="bg-aktina-primary text-white">{season.change}</Badge>
+                  { category: 'Laptops', revenue: 425000, growth: 23 },
+                  { category: 'Desktops', revenue: 380000, growth: 18 },
+                  { category: 'Tablets', revenue: 295000, growth: 31 },
+                  { category: 'Accessories', revenue: 240000, growth: 15 }
+                ].map((cat) => (
+                  <div key={cat.category} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <div className="font-medium">{cat.category}</div>
+                      <div className="text-sm text-muted-foreground">${cat.revenue.toLocaleString()}</div>
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      Top Categories: {season.products}
+                    <div className="text-right">
+                      <Badge className="bg-aktina-primary text-white">+{cat.growth}%</Badge>
                     </div>
-                  </Card>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
-          
-          <div className="mt-6">
-            <h3 className="text-lg font-semibold mb-4">Competitive Analysis</h3>
-            <div className="space-y-4">
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderInsightsTab = () => (
+    <div className="space-y-6 animate-fade-in">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <AnalyticsCard
+          title="Market Share"
+          value={18}
+          unit="%"
+          trend="up"
+          trendValue="vs last quarter"
+        />
+        <AnalyticsCard
+          title="Brand Awareness"
+          value={65}
+          unit="%"
+          trend="up"
+          trendValue="Regional leader"
+        />
+        <AnalyticsCard
+          title="Customer Loyalty"
+          value={82}
+          unit="%"
+          trend="up"
+          trendValue="Industry best"
+        />
+      </div>
+
+      <ChartCard
+        title="Customer Acquisition Cost"
+        description="Cost analysis for acquiring new customers"
+        data={salesData}
+        type="line"
+        dataKey="customers"
+        xAxisKey="name"
+        color="hsl(var(--aktina-amber))"
+      />
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Market Trend Analysis</CardTitle>
+          <CardDescription>In-depth analysis of market trends and customer behavior</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Customer Segmentation</h3>
               <ChartCard
-                title="Market Share Comparison"
+                title="Customer Segments"
                 data={[
-                  { name: 'Your Store', share: 18 },
-                  { name: 'Main Competitor', share: 22 },
-                  { name: 'Local Shop A', share: 15 },
-                  { name: 'Local Shop B', share: 12 },
-                  { name: 'Others', share: 33 }
+                  { name: 'Loyal', value: 45 },
+                  { name: 'Potential', value: 28 },
+                  { name: 'New', value: 22 },
+                  { name: 'Churn', value: 15 }
                 ]}
-                type="bar"
-                dataKey="share"
-                xAxisKey="name"
-                color="hsl(var(--aktina-forest))"
+                type="pie"
+                dataKey="value"
+                className="h-64"
               />
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            </div>
+            
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Product Performance</h3>
+              <div className="space-y-3">
                 {[
-                  { metric: 'Price Competitiveness', score: 87, trend: 'up', benchmark: 'Above avg' },
-                  { metric: 'Selection Range', score: 92, trend: 'up', benchmark: 'Industry leading' },
-                  { metric: 'Customer Experience', score: 94, trend: 'up', benchmark: 'Best in class' },
-                  { metric: 'Brand Recognition', score: 78, trend: 'up', benchmark: 'Improving' }
-                ].map((metric, index) => (
-                  <Card key={index} className="p-3">
-                    <div className="text-sm text-muted-foreground">{metric.metric}</div>
-                    <div className="font-semibold text-lg">{metric.score}%</div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-xs text-muted-foreground">{metric.benchmark}</span>
-                      <Badge variant="secondary" className="text-xs">
-                        {metric.trend === 'up' ? '↗' : '↘'} Trend
-                      </Badge>
+                  { product: 'Laptop', revenue: 425000, growth: 23 },
+                  { product: 'Desktop', revenue: 380000, growth: 18 },
+                  { product: 'Tablet', revenue: 295000, growth: 31 },
+                  { product: 'Accessory', revenue: 240000, growth: 15 }
+                ].map((item) => (
+                  <div key={item.product} className="flex items-center justify-between p-3 border rounded-lg">
+                    <div>
+                      <div className="font-medium">{item.product}</div>
+                      <div className="text-sm text-muted-foreground">${item.revenue.toLocaleString()}</div>
                     </div>
-                  </Card>
+                    <div className="text-right">
+                      <Badge className="bg-aktina-primary text-white">+{item.growth}%</Badge>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
           </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+
+  const renderCommunicationTab = () => (
+    <div className="space-y-6 animate-fade-in">
+      <Card>
+        <CardHeader>
+          <CardTitle>Communication Center</CardTitle>
+          <CardDescription>Chat with suppliers, wholesalers, customers, and get AI assistance for retail operations</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ChatInterface userRole="Retailer" />
         </CardContent>
       </Card>
     </div>
@@ -555,8 +582,10 @@ const RetailerDashboard: React.FC = () => {
     switch (activeTab) {
       case 'home': return renderHomeTab();
       case 'orders': return renderOrdersTab();
-      case 'feedback': return renderFeedbackTab();
+      case 'customers': return renderCustomersTab();
+      case 'analytics': return renderAnalyticsTab();
       case 'insights': return renderInsightsTab();
+      case 'communication': return renderCommunicationTab();
       case 'profile': return <ProfileSettings />;
       default: return renderHomeTab();
     }
@@ -565,7 +594,7 @@ const RetailerDashboard: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-aktina-forest to-aktina-blue bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-aktina-blue to-aktina-purple bg-clip-text text-transparent">
           Retailer Dashboard
         </h1>
       </div>

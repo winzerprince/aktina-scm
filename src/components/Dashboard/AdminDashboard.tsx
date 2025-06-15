@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import TabNavigation from '../Navigation/TabNavigation';
 import MetricCard from './MetricCard';
@@ -7,6 +6,9 @@ import AnalyticsCard from './AnalyticsCard';
 import CustomerSegmentationChart from './CustomerSegmentationChart';
 import ProfileSettings from '../Profile/ProfileSettings';
 import ChatInterface from '../Chat/ChatInterface';
+import PendingRequestsPanel from './PendingRequestsPanel';
+import { PredictionCard } from './PredictionCard';
+import { PredictionChartModal } from './PredictionChartModal';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -41,6 +43,91 @@ const AdminDashboard: React.FC = () => {
     { department: 'HR', efficiency: 91, budget: 92, satisfaction: 95 },
     { department: 'IT', efficiency: 88, budget: 89, satisfaction: 87 }
   ];
+
+  const [predictionMetric, setPredictionMetric] = useState<"sales" | "supply" | "revenue">("sales");
+  const [predictionTimeframe, setPredictionTimeframe] = useState<"day" | "week" | "month">("month");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalData, setModalData] = useState<{ metric: string; history: any[]; unit: string } | null>(null);
+
+  // Mock data for predictions
+  const predictions = {
+    sales: {
+      day: { value: 105, previous: 96, unit: "", label: "Predicted Sales (Day)", history: [
+        { date: "3d ago", real: 91 },
+        { date: "2d ago", real: 96 },
+        { date: "Yesterday", real: 99 },
+        { date: "Today", real: 98, predicted: 105 }
+      ] },
+      week: { value: 755, previous: 700, unit: "", label: "Predicted Sales (Week)", history: [
+        { date: "2w ago", real: 650 },
+        { date: "1w ago", real: 700 },
+        { date: "Current", real: 701 },
+        { date: "Next week", predicted: 755 }
+      ] },
+      month: { value: 3120, previous: 2990, unit: "", label: "Predicted Sales (Month)", history: [
+        { date: "April", real: 2990 },
+        { date: "May", real: 3120, predicted: 3120 }
+      ] }
+    },
+    supply: {
+      day: { value: 530, previous: 500, unit: "kg", label: "Predicted Raw Materials (Day)", history: [
+        { date: "3d ago", real: 488 },
+        { date: "2d ago", real: 500 },
+        { date: "Yesterday", real: 510 },
+        { date: "Today", real: 512, predicted: 530 }
+      ] },
+      week: { value: 3700, previous: 3500, unit: "kg", label: "Predicted Raw Materials (Week)", history: [
+        { date: "2w ago", real: 3450 },
+        { date: "1w ago", real: 3500 },
+        { date: "Current", real: 3550 },
+        { date: "Next week", predicted: 3700 }
+      ] },
+      month: { value: 14800, previous: 14100, unit: "kg", label: "Predicted Raw Materials (Month)", history: [
+        { date: "April", real: 14100 },
+        { date: "May", real: 14800, predicted: 14800 }
+      ] }
+    },
+    revenue: {
+      day: { value: 10500, previous: 10100, unit: "$", label: "Predicted Revenue (Day)", history: [
+        { date: "3d ago", real: 9800 },
+        { date: "2d ago", real: 10100 },
+        { date: "Yesterday", real: 10350 },
+        { date: "Today", real: 10450, predicted: 10500 }
+      ] },
+      week: { value: 72000, previous: 69000, unit: "$", label: "Predicted Revenue (Week)", history: [
+        { date: "2w ago", real: 66000 },
+        { date: "1w ago", real: 69000 },
+        { date: "Current", real: 69500 },
+        { date: "Next week", predicted: 72000 }
+      ] },
+      month: { value: 312000, previous: 303000, unit: "$", label: "Predicted Revenue (Month)", history: [
+        { date: "April", real: 303000 },
+        { date: "May", real: 312000, predicted: 312000 }
+      ] }
+    }
+  };
+
+  const predictionMetrics: Array<{ key: "sales" | "supply" | "revenue"; label: string }> = [
+    { key: "sales", label: "Sales" },
+    { key: "supply", label: "Supply Demand" },
+    { key: "revenue", label: "Revenue" }
+  ];
+
+  const predictionTimeframes: Array<{ key: "day" | "week" | "month"; label: string }> = [
+    { key: "day", label: "Day" },
+    { key: "week", label: "Week" },
+    { key: "month", label: "Month" }
+  ];
+
+  const openChartModal = (metric: "sales" | "supply" | "revenue", timeframe: "day" | "week" | "month") => {
+    const data = predictions[metric][timeframe];
+    setModalData({
+      metric: data.label,
+      history: data.history,
+      unit: data.unit,
+    });
+    setModalOpen(true);
+  };
 
   const renderHomeTab = () => (
     <div className="space-y-6 animate-fade-in">
@@ -337,65 +424,64 @@ const AdminDashboard: React.FC = () => {
 
   const renderPredictionsTab = () => (
     <div className="space-y-6 animate-fade-in">
-      <Card>
+      <Card className="bg-white/60 backdrop-blur rounded-2xl border-0 shadow">
         <CardHeader>
-          <CardTitle>Strategic Predictions & AI Insights</CardTitle>
-          <CardDescription>Market intelligence, growth projections, and strategic recommendations</CardDescription>
+          <CardTitle>Sales & Supply Predictions</CardTitle>
+          <div className="flex gap-3 flex-wrap mt-3">
+            {/* SWITCH METRIC */}
+            {predictionMetrics.map((m) => (
+              <button
+                key={m.key}
+                className={`px-4 py-1 rounded-full font-medium transition-all border ${
+                  predictionMetric === m.key
+                    ? "bg-gradient-to-br from-blue-200 to-blue-400 text-blue-900 border-blue-400 shadow"
+                    : "bg-white/60 border-neutral-200 text-neutral-700"
+                }`}
+                onClick={() => setPredictionMetric(m.key)}
+              >
+                {m.label}
+              </button>
+            ))}
+            {/* SWITCH TIMEFRAME */}
+            {predictionTimeframes.map((t) => (
+              <button
+                key={t.key}
+                className={`px-4 py-1 rounded-full font-medium transition-all border ${
+                  predictionTimeframe === t.key
+                    ? "bg-gradient-to-br from-aktina-red/60 to-aktina-primary/80 text-white border-aktina-red shadow"
+                    : "bg-white/60 border-neutral-200 text-neutral-700"
+                }`}
+                onClick={() => setPredictionTimeframe(t.key)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Market Predictions</h3>
-              <div className="space-y-4">
-                {[
-                  { period: 'Q3 2024', prediction: 'Strong Growth', confidence: 94, impact: 'Revenue +23%' },
-                  { period: 'Q4 2024', prediction: 'Market Expansion', confidence: 87, impact: 'Market Share +5%' },
-                  { period: 'Q1 2025', prediction: 'Technology Shift', confidence: 76, impact: 'Investment Needed' },
-                  { period: 'H1 2025', prediction: 'Consolidation', confidence: 82, impact: 'Competitive Advantage' }
-                ].map((pred) => (
-                  <Card key={pred.period} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-semibold">{pred.period}</div>
-                      <Badge className="bg-aktina-blue text-white">{pred.confidence}% Confidence</Badge>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="font-medium text-aktina-primary">{pred.prediction}</div>
-                      <div className="text-sm text-muted-foreground">{pred.impact}</div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-            
-            <div>
-              <h3 className="text-lg font-semibold mb-4">Strategic Recommendations</h3>
-              <div className="space-y-4">
-                {[
-                  { title: 'Expand Production Capacity', priority: 'High', impact: 'Revenue Growth', timeline: '6 months' },
-                  { title: 'Invest in AI Technology', priority: 'High', impact: 'Efficiency +25%', timeline: '12 months' },
-                  { title: 'New Market Entry', priority: 'Medium', impact: 'Market Share +8%', timeline: '18 months' },
-                  { title: 'Sustainability Initiative', priority: 'Medium', impact: 'Brand Value +15%', timeline: '24 months' }
-                ].map((rec) => (
-                  <Card key={rec.title} className="p-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="font-semibold">{rec.title}</div>
-                      <Badge className={
-                        rec.priority === 'High' ? 'bg-red-100 text-red-800' : 'bg-amber-100 text-amber-800'
-                      }>
-                        {rec.priority} Priority
-                      </Badge>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-sm font-medium text-green-600">{rec.impact}</div>
-                      <div className="text-sm text-muted-foreground">Timeline: {rec.timeline}</div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <PredictionCard
+              metric={predictionMetric}
+              value={predictions[predictionMetric][predictionTimeframe].value}
+              previous={predictions[predictionMetric][predictionTimeframe].previous}
+              timeframe={predictionTimeframe}
+              unit={predictions[predictionMetric][predictionTimeframe].unit}
+              label={predictions[predictionMetric][predictionTimeframe].label}
+              onClick={() => openChartModal(predictionMetric, predictionTimeframe)}
+            />
           </div>
         </CardContent>
       </Card>
+
+      {modalData && (
+        <PredictionChartModal
+          open={modalOpen}
+          onOpenChange={setModalOpen}
+          metricLabel={modalData.metric}
+          history={modalData.history}
+          unit={modalData.unit}
+        />
+      )}
     </div>
   );
 
@@ -415,6 +501,10 @@ const AdminDashboard: React.FC = () => {
 
   const renderUsersTab = () => (
     <div className="space-y-6 animate-fade-in">
+      {/* PENDING REQUESTS */}
+      <PendingRequestsPanel />
+
+      {/* Existing Analytics */}
       <Card>
         <CardHeader>
           <CardTitle>User Management</CardTitle>

@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Home, BarChart3, TrendingUp, MessageSquare, Users, Settings, DollarSign, Building, Shield, Bell } from 'lucide-react';
 import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } from "recharts";
+import HomeDashboardPanel from './HomeDashboardPanel';
 
 const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');

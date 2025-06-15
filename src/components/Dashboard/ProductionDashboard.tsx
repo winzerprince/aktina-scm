@@ -26,6 +26,26 @@ const assemblyLinesMock = [
   { id: 'AL-2', name: 'Line 2', status: 'Paused', output: 0 }
 ];
 
+// Sample/mock data for Analytics tab
+const productionData = [
+  { name: 'Week 1', output: 850 },
+  { name: 'Week 2', output: 910 },
+  { name: 'Week 3', output: 780 },
+  { name: 'Week 4', output: 800 },
+];
+
+const machineData = [
+  { name: 'Extruder A', efficiency: 97 },
+  { name: 'Assembler B', efficiency: 95 },
+  { name: 'Quality Scanner', efficiency: 98 },
+  { name: 'Packaging Unit', efficiency: 94 },
+];
+
+const alerts = [
+  { id: 1, machine: 'Extruder A', description: 'Short downtime, 12 min', priority: 'Medium' },
+  { id: 2, machine: 'Assembler B', description: 'Maintenance scheduled', priority: 'Low' },
+];
+
 const ProductionDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [orders, setOrders] = useState(ordersMock);
@@ -178,20 +198,21 @@ const ProductionDashboard: React.FC = () => {
                   border border-transparent hover:border-aktina-blue/40 hover:scale-[1.01]
                   ${line.status === 'Active' ? 'bg-green-50/70' : 'bg-amber-100/50'}`}
                 >
-                <div>
-                  <span className="font-semibold">{line.name}</span>
-                  <span className="ml-2 text-xs opacity-60">({line.id})</span>
+                  <div>
+                    <span className="font-semibold">{line.name}</span>
+                    <span className="ml-2 text-xs opacity-60">({line.id})</span>
+                  </div>
+                  <div>
+                    <Badge className={line.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-amber-200 text-amber-800'}>
+                      {line.status}
+                    </Badge>
+                  </div>
+                  <span className="text-sm text-muted-foreground">{line.output} units</span>
                 </div>
-                <div>
-                  <Badge className={line.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-amber-200 text-amber-800'}>
-                    {line.status}
-                  </Badge>
-                </div>
-                <span className="text-sm text-muted-foreground">{line.output} units</span>
-              </div>
-            ))}
-          </div>
-        </CardContent>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
       </Card>
     </div>
   );

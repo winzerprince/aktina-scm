@@ -166,31 +166,44 @@ const RetailerDashboard: React.FC = () => {
   };
 
   const renderHomeTab = () => (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       {/* Sales Overview */}
-      <Card className="bg-gradient-to-r from-aktina-blue/10 to-aktina-purple/10 border-0">
-        <CardHeader>
-          <CardTitle className="text-xl">Sales Overview</CardTitle>
+      <Card className="relative overflow-hidden border-0 shadow-2xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-aktina-blue/10 via-aktina-purple/10 to-aktina-pink/10" />
+        <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-20 translate-x-20" />
+        
+        <CardHeader className="relative z-10">
+          <CardTitle className="text-2xl bg-gradient-to-r from-aktina-blue to-aktina-purple bg-clip-text text-transparent">
+            Sales Overview
+          </CardTitle>
           <CardDescription>Real-time sales metrics and customer engagement</CardDescription>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <div>
-              <div className="text-2xl font-bold text-aktina-blue">{totalCustomers}</div>
-              <div className="text-sm text-muted-foreground">Total Customers</div>
+        <CardContent className="relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="text-center p-4 rounded-lg glass-effect">
+              <div className="text-3xl font-bold bg-gradient-to-r from-aktina-blue to-aktina-cyan bg-clip-text text-transparent animate-counter">
+                {totalCustomers}
+              </div>
+              <div className="text-sm text-muted-foreground mt-2">Total Customers</div>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-aktina-purple">{orderCount}</div>
-              <div className="text-sm text-muted-foreground">Total Orders</div>
-              <Progress value={Math.min((orderCount / 50) * 100, 100)} className="mt-2" />
+            <div className="text-center p-4 rounded-lg glass-effect">
+              <div className="text-3xl font-bold bg-gradient-to-r from-aktina-purple to-aktina-pink bg-clip-text text-transparent animate-counter">
+                {orderCount}
+              </div>
+              <div className="text-sm text-muted-foreground mt-2">Total Orders</div>
+              <Progress value={Math.min((orderCount / 50) * 100, 100)} className="mt-3 h-2" />
             </div>
-            <div>
-              <div className="text-2xl font-bold text-aktina-amber">${totalValue.toLocaleString()}</div>
-              <div className="text-sm text-muted-foreground">Total Revenue</div>
+            <div className="text-center p-4 rounded-lg glass-effect">
+              <div className="text-3xl font-bold bg-gradient-to-r from-aktina-amber to-aktina-orange bg-clip-text text-transparent animate-counter">
+                ${totalValue.toLocaleString()}
+              </div>
+              <div className="text-sm text-muted-foreground mt-2">Total Revenue</div>
             </div>
-            <div>
-              <div className="text-2xl font-bold text-aktina-forest">{averageRating.toFixed(1)}/5</div>
-              <div className="text-sm text-muted-foreground">Customer Satisfaction</div>
+            <div className="text-center p-4 rounded-lg glass-effect">
+              <div className="text-3xl font-bold bg-gradient-to-r from-aktina-forest to-emerald-500 bg-clip-text text-transparent animate-counter">
+                {averageRating.toFixed(1)}/5
+              </div>
+              <div className="text-sm text-muted-foreground mt-2">Customer Satisfaction</div>
             </div>
           </div>
         </CardContent>
@@ -235,33 +248,41 @@ const RetailerDashboard: React.FC = () => {
       </div>
 
       {/* Recent Orders */}
-      <Card>
+      <Card className="glass-effect border-0 shadow-xl">
         <CardHeader>
-          <CardTitle>Recent Orders</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Recent Orders
+          </CardTitle>
           <CardDescription>Latest orders requiring attention</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {allOrders.slice(0, 4).map((order, index) => (
-              <div key={order.id} className="flex items-center justify-between p-4 border rounded-lg hover:shadow-md transition-all">
+              <div 
+                key={order.id} 
+                className="flex items-center justify-between p-6 border border-border/50 rounded-xl hover:shadow-xl transition-all duration-300 glass-effect animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex items-center space-x-4">
-                  <div>
-                    <div className="font-semibold">{order.id}</div>
-                    <div className="text-sm text-muted-foreground">{order.customer}</div>
+                  <div className="w-12 h-12 bg-gradient-to-br from-aktina-blue to-aktina-purple rounded-full flex items-center justify-center">
+                    <ShoppingCart className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <div className="font-medium">{order.products}</div>
-                    <div className="text-sm text-muted-foreground">Qty: {order.quantity}</div>
+                    <div className="font-semibold text-lg">{order.id}</div>
+                    <div className="text-sm text-muted-foreground">{order.customer}</div>
+                    <div className="text-xs text-muted-foreground mt-1">{order.products}</div>
                   </div>
                 </div>
-                <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <div className="font-semibold">${order.value.toLocaleString()}</div>
-                    <div className="flex space-x-1">
-                      <Badge className={getPriorityColor(order.priority)}>
+                    <div className="font-bold text-xl bg-gradient-to-r from-aktina-amber to-aktina-orange bg-clip-text text-transparent">
+                      ${order.value.toLocaleString()}
+                    </div>
+                    <div className="flex space-x-2 mt-2">
+                      <Badge className={`${getPriorityColor(order.priority)} border-0`}>
                         {order.priority}
                       </Badge>
-                      <Badge className={getStatusColor(order.status)}>
+                      <Badge className={`${getStatusColor(order.status)} border-0`}>
                         {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
                       </Badge>
                     </div>
@@ -270,6 +291,7 @@ const RetailerDashboard: React.FC = () => {
                     size="sm" 
                     variant="outline"
                     onClick={() => setSelectedOrder(order)}
+                    className="button-hover glass-effect border-border/50"
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
@@ -281,30 +303,47 @@ const RetailerDashboard: React.FC = () => {
       </Card>
 
       {/* Top Customers */}
-      <Card>
+      <Card className="glass-effect border-0 shadow-xl">
         <CardHeader>
-          <CardTitle>Top Customers</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Top Customers
+          </CardTitle>
           <CardDescription>Revenue and engagement metrics for key customers</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {customers.slice(0, 4).map((customer, index) => (
-              <Card key={customer.id} className="p-4">
-                <div className="flex items-center justify-between mb-3">
-                  <div>
-                    <div className="font-semibold">{customer.name}</div>
-                    <div className="text-sm text-muted-foreground">{customer.orders} orders • ${customer.revenue.toLocaleString()}</div>
+              <Card 
+                key={customer.id} 
+                className="p-6 glass-effect border-border/50 card-hover animate-bounce-in"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-to-br from-aktina-indigo to-aktina-purple rounded-full flex items-center justify-center">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <div className="font-semibold text-lg">{customer.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {customer.orders} orders • ${customer.revenue.toLocaleString()}
+                      </div>
+                    </div>
                   </div>
-                  <Badge className={getCustomerStatusColor(customer.status)}>
+                  <Badge className={`${getCustomerStatusColor(customer.status)} border-0`}>
                     {customer.status}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm">Rating: {customer.rating} ⭐</span>
+                  <span className="text-sm flex items-center">
+                    <Star className="w-4 h-4 text-amber-400 mr-1" />
+                    {customer.rating} rating
+                  </span>
                   <Button 
                     size="sm" 
                     variant="outline"
                     onClick={() => setSelectedCustomer(customer)}
+                    className="button-hover glass-effect border-border/50"
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
@@ -320,45 +359,90 @@ const RetailerDashboard: React.FC = () => {
         title="Sales Performance Trends"
         description="Monthly sales, orders, and customer growth trends"
         data={salesData}
-        type="line"
+        type="area"
         dataKey="sales"
         xAxisKey="name"
         color="hsl(var(--aktina-blue))"
+        gradient={true}
       />
     </div>
   );
 
   const renderOrdersTab = () => (
-    <div className="space-y-6 animate-fade-in">
-      <Card>
+    <div className="space-y-8 animate-fade-in">
+      <Card className="glass-effect border-0 shadow-xl">
         <CardHeader>
-          <CardTitle>Order Management</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Order Management
+          </CardTitle>
           <CardDescription>Manage and track customer orders</CardDescription>
         </CardHeader>
         <CardContent>
           {/* Order Statistics */}
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4 mb-6">
-            <AnalyticsCard title="Pending" value={pendingCount} trend="neutral" trendValue="requires action" />
-            <AnalyticsCard title="Processing" value={processingCount} trend="up" trendValue="in progress" />
-            <AnalyticsCard title="Shipped" value={shippedCount} trend="up" trendValue="on the way" />
-            <AnalyticsCard title="Delivered" value={deliveredCount} trend="up" trendValue="completed" />
-            <AnalyticsCard title="Accepted" value={acceptedCount} trend="up" trendValue="confirmed" />
-            <AnalyticsCard title="High Priority" value={highPriorityCount} trend="down" trendValue="urgent" />
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+            <AnalyticsCard 
+              title="Pending" 
+              value={pendingCount} 
+              trend="neutral" 
+              trendValue="requires action"
+              gradient="from-amber-500 to-orange-500"
+              delay={0}
+            />
+            <AnalyticsCard 
+              title="Processing" 
+              value={processingCount} 
+              trend="up" 
+              trendValue="in progress"
+              gradient="from-blue-500 to-indigo-500"
+              delay={100}
+            />
+            <AnalyticsCard 
+              title="Shipped" 
+              value={shippedCount} 
+              trend="up" 
+              trendValue="on the way"
+              gradient="from-purple-500 to-pink-500"
+              delay={200}
+            />
+            <AnalyticsCard 
+              title="Delivered" 
+              value={deliveredCount} 
+              trend="up" 
+              trendValue="completed"
+              gradient="from-green-500 to-emerald-500"
+              delay={300}
+            />
+            <AnalyticsCard 
+              title="Accepted" 
+              value={acceptedCount} 
+              trend="up" 
+              trendValue="confirmed"
+              gradient="from-teal-500 to-cyan-500"
+              delay={400}
+            />
+            <AnalyticsCard 
+              title="High Priority" 
+              value={highPriorityCount} 
+              trend="down" 
+              trendValue="urgent"
+              gradient="from-red-500 to-rose-500"
+              delay={500}
+            />
           </div>
 
           {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search orders, customers, products..."
                 value={orderSearchTerm}
                 onChange={(e) => setOrderSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 glass-effect border-border/50"
               />
             </div>
             <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as typeof statusFilter)}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 glass-effect border-border/50">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -372,7 +456,7 @@ const RetailerDashboard: React.FC = () => {
               </SelectContent>
             </Select>
             <Select value={priorityFilter} onValueChange={(value) => setPriorityFilter(value as typeof priorityFilter)}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 glass-effect border-border/50">
                 <SelectValue placeholder="Priority" />
               </SelectTrigger>
               <SelectContent>
@@ -385,9 +469,13 @@ const RetailerDashboard: React.FC = () => {
           </div>
           
           {/* Orders List */}
-          <div className="space-y-4">
+          <div className="space-y-6">
             {orders.map((order, index) => (
-              <Card key={order.id} className="p-4 hover:shadow-lg transition-all">
+              <Card 
+                key={order.id} 
+                className="p-6 glass-effect border-border/50 card-hover animate-slide-up"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <div className="font-semibold text-lg">
@@ -502,9 +590,9 @@ const RetailerDashboard: React.FC = () => {
               </Card>
             ))}
             {orders.length === 0 && (
-              <div className="text-center py-8">
-                <Package className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No orders match your search criteria.</p>
+              <div className="text-center py-12">
+                <Package className="w-16 h-16 mx-auto text-muted-foreground mb-4 opacity-50" />
+                <p className="text-muted-foreground text-lg">No orders match your search criteria.</p>
               </div>
             )}
           </div>
@@ -514,32 +602,40 @@ const RetailerDashboard: React.FC = () => {
   );
 
   const renderCustomersTab = () => (
-    <div className="space-y-6 animate-fade-in">
-      <Card>
+    <div className="space-y-8 animate-fade-in">
+      <Card className="glass-effect border-0 shadow-xl">
         <CardHeader>
-          <CardTitle>Customer Management</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Customer Management
+          </CardTitle>
           <CardDescription>Manage customer relationships and profiles</CardDescription>
         </CardHeader>
         <CardContent>
           {/* Customer Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
             <AnalyticsCard
               title="Total Customers"
               value={totalCustomers}
               trend="up"
               trendValue="growing base"
+              gradient="from-blue-500 to-purple-500"
+              delay={0}
             />
             <AnalyticsCard
               title="Active Customers"
               value={activeCustomers}
               trend="up"
               trendValue={`${Math.round((activeCustomers/totalCustomers)*100)}% active`}
+              gradient="from-green-500 to-teal-500"
+              delay={100}
             />
             <AnalyticsCard
               title="Premium Customers"
               value={premiumCustomers}
               trend="up"
               trendValue="high value"
+              gradient="from-purple-500 to-pink-500"
+              delay={200}
             />
             <AnalyticsCard
               title="Avg Rating"
@@ -547,22 +643,24 @@ const RetailerDashboard: React.FC = () => {
               unit="/5"
               trend="up"
               trendValue="excellent service"
+              gradient="from-amber-500 to-orange-500"
+              delay={300}
             />
           </div>
 
           {/* Search and Filters */}
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 placeholder="Search customers by name, email, location..."
                 value={customerSearchTerm}
                 onChange={(e) => setCustomerSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 glass-effect border-border/50"
               />
             </div>
             <Select value={customerStatusFilter} onValueChange={(value) => setCustomerStatusFilter(value as typeof customerStatusFilter)}>
-              <SelectTrigger className="w-40">
+              <SelectTrigger className="w-40 glass-effect border-border/50">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -575,12 +673,12 @@ const RetailerDashboard: React.FC = () => {
           </div>
           
           {/* Customers Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {customers.map((customer) => (
-              <Card key={customer.id} className="p-4 hover:shadow-lg transition-all">
+              <Card key={customer.id} className="p-6 glass-effect border-border/50 card-hover animate-bounce-in">
                 <div className="flex items-center space-x-3 mb-3">
-                  <div className="w-12 h-12 bg-aktina-blue/10 rounded-full flex items-center justify-center">
-                    <Users className="w-6 h-6 text-aktina-blue" />
+                  <div className="w-12 h-12 bg-gradient-to-br from-aktina-indigo to-aktina-purple rounded-full flex items-center justify-center">
+                    <Users className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
                     <div className="font-semibold">{customer.name}</div>
@@ -642,9 +740,9 @@ const RetailerDashboard: React.FC = () => {
               </Card>
             ))}
             {customers.length === 0 && (
-              <div className="col-span-full text-center py-8">
-                <Users className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                <p className="text-muted-foreground">No customers match your search criteria.</p>
+              <div className="col-span-full text-center py-12">
+                <Users className="w-16 h-16 mx-auto text-muted-foreground mb-4 opacity-50" />
+                <p className="text-muted-foreground text-lg">No customers match your search criteria.</p>
               </div>
             )}
           </div>
@@ -654,7 +752,7 @@ const RetailerDashboard: React.FC = () => {
   );
 
   const renderAnalyticsTab = () => (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <AnalyticsCard
           title="Revenue Growth"
@@ -662,6 +760,8 @@ const RetailerDashboard: React.FC = () => {
           unit="%"
           trend="up"
           trendValue="vs last quarter"
+          gradient="from-green-500 to-emerald-500"
+          delay={0}
         />
         <AnalyticsCard
           title="Market Penetration"
@@ -669,6 +769,8 @@ const RetailerDashboard: React.FC = () => {
           unit="%"
           trend="up"
           trendValue="Regional leader"
+          gradient="from-blue-500 to-indigo-500"
+          delay={100}
         />
         <AnalyticsCard
           title="Customer Retention"
@@ -676,6 +778,8 @@ const RetailerDashboard: React.FC = () => {
           unit="%"
           trend="up"
           trendValue="Industry best"
+          gradient="from-purple-500 to-pink-500"
+          delay={200}
         />
       </div>
 
@@ -683,21 +787,26 @@ const RetailerDashboard: React.FC = () => {
         title="Sales Performance Analytics"
         description="Comprehensive business metrics and trend analysis"
         data={salesData}
-        type="bar"
+        type="area"
         dataKey="sales"
         xAxisKey="name"
         color="hsl(var(--aktina-blue))"
+        gradient={true}
       />
 
-      <Card>
+      <Card className="glass-effect border-0 shadow-xl">
         <CardHeader>
-          <CardTitle>Detailed Business Analytics</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Detailed Business Analytics
+          </CardTitle>
           <CardDescription>In-depth analysis of sales operations and market performance</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Customer Demographics</h3>
+              <h3 className="text-xl font-semibold mb-6 bg-gradient-to-r from-aktina-indigo to-aktina-purple bg-clip-text text-transparent">
+                Customer Demographics
+              </h3>
               <ChartCard
                 title="Customer Locations"
                 data={[
@@ -708,27 +817,37 @@ const RetailerDashboard: React.FC = () => {
                 ]}
                 type="pie"
                 dataKey="value"
-                className="h-64"
+                className="h-80"
+                gradient={true}
               />
             </div>
             
             <div>
-              <h3 className="text-lg font-semibold mb-4">Sales by Product Category</h3>
-              <div className="space-y-3">
+              <h3 className="text-xl font-semibold mb-6 bg-gradient-to-r from-aktina-amber to-aktina-orange bg-clip-text text-transparent">
+                Sales by Product Category
+              </h3>
+              <div className="space-y-4">
                 {[
-                  { category: 'Laptops', revenue: 425000, growth: 23 },
-                  { category: 'Desktops', revenue: 380000, growth: 18 },
-                  { category: 'Tablets', revenue: 295000, growth: 31 },
-                  { category: 'Accessories', revenue: 240000, growth: 15 }
-                ].map((cat) => (
-                  <div key={cat.category} className="flex items-center justify-between p-3 border rounded-lg">
-                    <div>
-                      <div className="font-medium">{cat.category}</div>
-                      <div className="text-sm text-muted-foreground">${cat.revenue.toLocaleString()}</div>
+                  { category: 'Laptops', revenue: 425000, growth: 23, gradient: 'from-blue-500 to-indigo-500' },
+                  { category: 'Desktops', revenue: 380000, growth: 18, gradient: 'from-purple-500 to-pink-500' },
+                  { category: 'Tablets', revenue: 295000, growth: 31, gradient: 'from-green-500 to-teal-500' },
+                  { category: 'Accessories', revenue: 240000, growth: 15, gradient: 'from-amber-500 to-orange-500' }
+                ].map((cat, index) => (
+                  <div 
+                    key={cat.category} 
+                    className="flex items-center justify-between p-4 border border-border/50 rounded-xl glass-effect animate-slide-up"
+                    style={{ animationDelay: `${index * 150}ms` }}
+                  >
+                    <div className="flex items-center space-x-4">
+                      <div className={`w-4 h-4 rounded-full bg-gradient-to-r ${cat.gradient}`} />
+                      <div>
+                        <div className="font-semibold text-lg">{cat.category}</div>
+                        <div className="text-sm text-muted-foreground">${cat.revenue.toLocaleString()}</div>
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <Badge className="bg-aktina-primary text-white">+{cat.growth}%</Badge>
-                    </div>
+                    <Badge className={`bg-gradient-to-r ${cat.gradient} text-white border-0`}>
+                      +{cat.growth}%
+                    </Badge>
                   </div>
                 ))}
               </div>
@@ -740,7 +859,7 @@ const RetailerDashboard: React.FC = () => {
   );
 
   const renderInsightsTab = () => (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <AnalyticsCard
           title="Market Share"
@@ -748,6 +867,8 @@ const RetailerDashboard: React.FC = () => {
           unit="%"
           trend="up"
           trendValue="vs last quarter"
+          gradient="from-green-500 to-emerald-500"
+          delay={0}
         />
         <AnalyticsCard
           title="Brand Awareness"
@@ -755,6 +876,8 @@ const RetailerDashboard: React.FC = () => {
           unit="%"
           trend="up"
           trendValue="Regional leader"
+          gradient="from-blue-500 to-indigo-500"
+          delay={100}
         />
         <AnalyticsCard
           title="Customer Loyalty"
@@ -762,6 +885,8 @@ const RetailerDashboard: React.FC = () => {
           unit="%"
           trend="up"
           trendValue="Industry best"
+          gradient="from-purple-500 to-pink-500"
+          delay={200}
         />
       </div>
 
@@ -773,11 +898,14 @@ const RetailerDashboard: React.FC = () => {
         dataKey="customers"
         xAxisKey="name"
         color="hsl(var(--aktina-amber))"
+        gradient={true}
       />
 
-      <Card>
+      <Card className="glass-effect border-0 shadow-xl">
         <CardHeader>
-          <CardTitle>Market Trend Analysis</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Market Trend Analysis
+          </CardTitle>
           <CardDescription>In-depth analysis of market trends and customer behavior</CardDescription>
         </CardHeader>
         <CardContent>
@@ -795,6 +923,7 @@ const RetailerDashboard: React.FC = () => {
                 type="pie"
                 dataKey="value"
                 className="h-64"
+                gradient={true}
               />
             </div>
             
@@ -826,10 +955,12 @@ const RetailerDashboard: React.FC = () => {
   );
 
   const renderCommunicationTab = () => (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-8 animate-fade-in">
       <Card>
         <CardHeader>
-          <CardTitle>Communication Center</CardTitle>
+          <CardTitle className="bg-gradient-to-r from-aktina-primary to-aktina-purple bg-clip-text text-transparent">
+            Communication Center
+          </CardTitle>
           <CardDescription>Chat with suppliers, wholesalers, customers, and get AI assistance for retail operations</CardDescription>
         </CardHeader>
         <CardContent>
@@ -853,9 +984,9 @@ const RetailerDashboard: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-aktina-blue to-aktina-purple bg-clip-text text-transparent">
+    <div className="space-y-6 min-h-screen">
+      <div className="flex items-center justify-between mb-8">
+        <h1 className="text-4xl font-bold bg-gradient-to-r from-aktina-blue via-aktina-purple to-aktina-pink bg-clip-text text-transparent animate-fade-in">
           Retailer Dashboard
         </h1>
       </div>
@@ -864,14 +995,19 @@ const RetailerDashboard: React.FC = () => {
         tabs={tabs}
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        className="w-fit"
+        className="w-fit glass-effect border-border/50"
       />
 
-      {renderTabContent()}
+      <div className="relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-aktina-blue/5 via-aktina-purple/5 to-aktina-pink/5 rounded-3xl" />
+        <div className="relative z-10 p-6">
+          {renderTabContent()}
+        </div>
+      </div>
 
       {/* Order Details Modal */}
       <Dialog open={!!selectedOrder} onOpenChange={() => setSelectedOrder(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl glass-effect border-border/50">
           <DialogHeader>
             <DialogTitle>Order Details - {selectedOrder?.id}</DialogTitle>
             <DialogDescription>Complete order information and tracking</DialogDescription>
@@ -911,7 +1047,7 @@ const RetailerDashboard: React.FC = () => {
 
       {/* Customer Details Modal */}
       <Dialog open={!!selectedCustomer} onOpenChange={() => setSelectedCustomer(null)}>
-        <DialogContent className="max-w-2xl">
+        <DialogContent className="max-w-2xl glass-effect border-border/50">
           <DialogHeader>
             <DialogTitle>Customer Profile - {selectedCustomer?.name}</DialogTitle>
             <DialogDescription>Complete customer information and history</DialogDescription>

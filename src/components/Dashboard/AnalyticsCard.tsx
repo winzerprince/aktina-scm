@@ -15,6 +15,8 @@ interface AnalyticsCardProps {
   unit?: string;
   prefix?: string;
   className?: string;
+  delay?: number;
+  gradient?: string;
 }
 
 const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
@@ -27,13 +29,15 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   percentage,
   unit = '',
   prefix = '',
-  className = ''
+  className = '',
+  delay = 0,
+  gradient = 'from-aktina-blue to-aktina-purple'
 }) => {
   const getTrendColor = () => {
     switch (trend) {
-      case 'up': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'down': return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
+      case 'up': return 'bg-gradient-to-r from-emerald-500 to-green-500 text-white';
+      case 'down': return 'bg-gradient-to-r from-red-500 to-rose-500 text-white';
+      default: return 'bg-gradient-to-r from-slate-500 to-gray-500 text-white';
     }
   };
 
@@ -48,23 +52,40 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   const progressPercentage = target ? (value / target) * 100 : percentage || 0;
 
   return (
-    <Card className={`animate-fade-in ${className}`}>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">{title}</CardTitle>
+    <Card 
+      className={`animate-bounce-in card-hover relative overflow-hidden ${className}`}
+      style={{ animationDelay: `${delay}ms` }}
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5`} />
+      <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-white/10 to-transparent rounded-full -translate-y-10 translate-x-10" />
+      
+      <CardHeader className="pb-3 relative z-10">
+        <CardTitle className="text-sm font-medium text-muted-foreground flex items-center justify-between">
+          {title}
+          <div className={`w-3 h-3 rounded-full bg-gradient-to-r ${gradient} animate-pulse`} />
+        </CardTitle>
         {description && <CardDescription className="text-xs">{description}</CardDescription>}
       </CardHeader>
-      <CardContent>
-        <div className="space-y-3">
+      
+      <CardContent className="relative z-10">
+        <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold">{prefix}{value.toLocaleString()}{unit}</span>
+            <span className={`text-3xl font-bold bg-gradient-to-r ${gradient} bg-clip-text text-transparent`}>
+              {prefix}{value.toLocaleString()}{unit}
+            </span>
             {target && (
-              <span className="text-sm text-muted-foreground">/ {prefix}{target.toLocaleString()}{unit}</span>
+              <span className="text-sm text-muted-foreground">
+                / {prefix}{target.toLocaleString()}{unit}
+              </span>
             )}
           </div>
           
           {(target || percentage !== undefined) && (
-            <div className="space-y-1">
-              <Progress value={progressPercentage} className="h-2" />
+            <div className="space-y-2">
+              <Progress 
+                value={progressPercentage} 
+                className="h-2 bg-muted"
+              />
               <div className="flex justify-between text-xs text-muted-foreground">
                 <span>{progressPercentage.toFixed(1)}% Complete</span>
                 {target && <span>Target: {prefix}{target.toLocaleString()}{unit}</span>}
@@ -73,8 +94,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
           )}
           
           {trendValue && (
-            <Badge variant="secondary" className={`text-xs ${getTrendColor()}`}>
-              <span className="mr-1">{getTrendIcon()}</span>
+            <Badge className={`text-xs ${getTrendColor()} border-0 shadow-lg`}>
+              <span className="mr-1 text-sm">{getTrendIcon()}</span>
               {trendValue}
             </Badge>
           )}

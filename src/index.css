@@ -16,7 +16,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 120 61% 50%;
+    --primary: 240 73% 65%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -35,55 +35,63 @@
     --input: 214.3 31.8% 91.4%;
     --ring: 222.2 84% 4.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
-    /* Custom Aktina Colors */
-    --aktina-primary: 120 61% 50%; /* #32CD32 Lime Green */
-    --aktina-dark-green: 120 100% 20%; /* #006400 Dark Green */
-    --aktina-forest: 120 60% 34%; /* #228B22 Forest Green */
-    --aktina-blue: 210 100% 56%; /* #1E90FF Ocean Blue */
-    --aktina-purple: 248 53% 58%; /* #6A5ACD Royal Purple */
-    --aktina-red: 348 83% 47%; /* #DC143C Crimson Red */
-    --aktina-amber: 39 100% 50%; /* #FFA500 Amber */
+    /* Modern Color Palette */
+    --aktina-primary: 240 73% 65%; /* Modern Blue */
+    --aktina-dark-green: 158 64% 52%; /* Teal Green */
+    --aktina-forest: 142 71% 45%; /* Emerald */
+    --aktina-blue: 217 91% 60%; /* Bright Blue */
+    --aktina-purple: 262 83% 58%; /* Purple */
+    --aktina-red: 0 72% 51%; /* Modern Red */
+    --aktina-amber: 43 96% 56%; /* Golden */
+    --aktina-indigo: 239 84% 67%; /* Indigo */
+    --aktina-pink: 330 81% 60%; /* Pink */
+    --aktina-cyan: 189 94% 43%; /* Cyan */
+    --aktina-orange: 25 95% 53%; /* Orange */
   }
 
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
+    --background: 224 71% 4%;
+    --foreground: 213 31% 91%;
 
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
+    --card: 224 71% 4%;
+    --card-foreground: 213 31% 91%;
 
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 224 71% 4%;
+    --popover-foreground: 213 31% 91%;
 
-    --primary: 120 100% 50%;
-    --primary-foreground: 240 5.9% 10%;
+    --primary: 240 73% 65%;
+    --primary-foreground: 224 71% 4%;
 
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 215 28% 17%;
+    --secondary-foreground: 213 31% 91%;
 
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
+    --muted: 215 28% 17%;
+    --muted-foreground: 217 10% 65%;
 
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --accent: 215 28% 17%;
+    --accent-foreground: 213 31% 91%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 213 31% 91%;
 
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
+    --border: 215 28% 17%;
+    --input: 215 28% 17%;
+    --ring: 216 34% 17%;
 
-    /* Dark mode custom colors */
-    --aktina-primary: 120 100% 50%;
-    --aktina-dark-green: 120 100% 25%;
-    --aktina-forest: 120 60% 40%;
-    --aktina-blue: 210 100% 60%;
-    --aktina-purple: 248 53% 65%;
-    --aktina-red: 348 83% 55%;
-    --aktina-amber: 39 100% 55%;
+    /* Dark mode colors */
+    --aktina-primary: 240 73% 70%;
+    --aktina-dark-green: 158 64% 55%;
+    --aktina-forest: 142 71% 50%;
+    --aktina-blue: 217 91% 65%;
+    --aktina-purple: 262 83% 63%;
+    --aktina-red: 0 72% 56%;
+    --aktina-amber: 43 96% 61%;
+    --aktina-indigo: 239 84% 72%;
+    --aktina-pink: 330 81% 65%;
+    --aktina-cyan: 189 94% 48%;
+    --aktina-orange: 25 95% 58%;
   }
 }
 
@@ -94,6 +102,10 @@
 
   body {
     @apply bg-background text-foreground font-inter;
+    background: linear-gradient(135deg, 
+      hsl(var(--background)) 0%, 
+      hsl(var(--muted)) 100%);
+    min-height: 100vh;
   }
 }
 
@@ -103,23 +115,52 @@
   }
   
   .animate-fade-in {
-    animation: fadeIn 0.6s ease-out forwards;
+    animation: fadeIn 0.8s ease-out forwards;
   }
   
   .animate-slide-up {
-    animation: slideUp 0.4s ease-out forwards;
+    animation: slideUp 0.6s ease-out forwards;
   }
   
   .animate-scale-in {
-    animation: scaleIn 0.3s ease-out forwards;
+    animation: scaleIn 0.4s ease-out forwards;
+  }
+  
+  .animate-bounce-in {
+    animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
   }
   
   .card-hover {
-    @apply transition-all duration-200 hover:shadow-lg hover:-translate-y-1;
+    @apply transition-all duration-300 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02];
   }
   
   .button-hover {
-    @apply transition-all duration-200 hover:scale-105;
+    @apply transition-all duration-200 hover:scale-105 hover:shadow-lg;
+  }
+  
+  .gradient-bg {
+    background: linear-gradient(135deg, 
+      hsl(var(--aktina-primary)) 0%, 
+      hsl(var(--aktina-purple)) 50%, 
+      hsl(var(--aktina-pink)) 100%);
+  }
+  
+  .gradient-card {
+    background: linear-gradient(135deg, 
+      rgba(255, 255, 255, 0.1) 0%, 
+      rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
   }
 }
 
@@ -137,7 +178,7 @@
 @keyframes fadeIn {
   from { 
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to { 
     opacity: 1;
@@ -148,7 +189,7 @@
 @keyframes slideUp {
   from { 
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px);
   }
   to { 
     opacity: 1;
@@ -159,10 +200,62 @@
 @keyframes scaleIn {
   from { 
     opacity: 0;
-    transform: scale(0.95);
+    transform: scale(0.9);
   }
   to { 
     opacity: 1;
     transform: scale(1);
   }
+}
+
+@keyframes bounceIn {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, 
+    hsl(var(--aktina-primary)), 
+    hsl(var(--aktina-purple)));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, 
+    hsl(var(--aktina-purple)), 
+    hsl(var(--aktina-pink)));
 }
